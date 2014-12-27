@@ -1,0 +1,26 @@
+{
+  "name": "lite-backend",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ABucin/lite-backend.git"
+  },
+  "scripts": {
+    "start": "bin\\deploy_app.bat",
+    "start-linux": "./bin/deploy_app.sh",
+    "update": "npm update -g && npm update --save-dev"
+  },
+  "devDependencies": {
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "cors": "^2.5.2",
+    "express": "*",
+    "express-json": "*",
+    "express-session": "*",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-local-mongoose": "*",
+    "underscore": "*"
+  }
+}
