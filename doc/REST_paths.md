@@ -1,47 +1,49 @@
-#POST
-/itr/api/users/register
+Every route is prefixed by: **/itr/api**
 
-/itr/api/users/login
+###POST
+/users/register
 
-/itr/api/users/logout
+/users/login
 
-/itr/api/users/:userId/tickets/:ticketId/comments
+/users/logout
 
-/itr/api/users/:userId/tickets
+/users/:userId/tickets/:ticketId/comments
 
-/itr/api/users/:userId/logs
+/users/:userId/tickets
 
-#GET
-/itr/api/users
+/users/:userId/logs
 
-/itr/api/users?:project
+###GET
+/users
 
-/itr/api/users/:userId
+/users?:project
 
-/itr/api/users/:userId/settings
+/users/:userId
 
-/itr/api/users/:userId/tickets
+/users/:userId/settings
 
-/itr/api/tickets/:ticketId/comments
+/users/:userId/tickets
 
-/itr/api/logs
+/tickets/:ticketId/comments
 
-/itr/api/analytics?:type
+/logs
 
-#PUT
-/itr/api/users/:userId
+/analytics?:type
 
-/itr/api/users/:userId/tickets/:ticketId/comments/:commentId
+###PUT
+/users/:userId
 
-/itr/api/users/:userId/settings/:settingId
+/users/:userId/tickets/:ticketId/comments/:commentId
 
-/itr/api/tickets/:ticketId
+/users/:userId/settings/:settingId
 
-/itr/api/projects/:projectId
+/tickets/:ticketId
 
-/itr/api/settings
+/projects/:projectId
 
-#DELETE
-/itr/api/users/:userId/comments/:commentId
+/settings
 
-/itr/api/tickets/:ticketId
+###DELETE
+/users/:userId/comments/:commentId
+
+/tickets/:ticketId
