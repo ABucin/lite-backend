@@ -6,8 +6,8 @@ Backend for the LITE project.
 ## Technology stack
 
 * Node.js
-*   express
-*   passport
+** express
+** passport
 * MongoDB
 
 Every route is prefixed by: **/itr/api**
