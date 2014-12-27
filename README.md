@@ -1,7 +1,16 @@
 lite-backend
 ============
 
-Backend for the LITE project. Every route is prefixed by: **/itr/api**
+Backend for the LITE project. 
+
+## Technology stack
+
+* Node.js
+*   express
+*   passport
+* MongoDB
+
+Every route is prefixed by: **/itr/api**
 
 ###POST
 /users/register
