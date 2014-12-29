@@ -13,7 +13,7 @@ var express = require('express'),
     /**
      * Required JS files.
      */
-    config = require('./config.json'),
+    config = require('./../config.json'),
     utils = require('./utils/population'),
     persistenceService = require('./service/persistence'),
     analyticsService = require('./service/analytics'),
@@ -30,7 +30,9 @@ server.use(cors());
 // Set the path to the index.html file.
 server.use(express.static(__dirname + "./../"));
 server.use(session({
-    secret: config.secret
+    secret: config.secret,
+    saveUninitialized: true,
+    resave: true
 }));
 server.use(passport.initialize());
 server.use(passport.session());

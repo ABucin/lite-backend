@@ -1,5 +1,5 @@
 var mongoose = require('mongoose'),
-	config = require('./../config.json'),
+	config = require('./../../config.json'),
 	_ = require('underscore')._;
 
 mongoose.connect(config.dbURI);

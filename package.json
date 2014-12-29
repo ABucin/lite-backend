@@ -1,6 +1,7 @@
 {
   "name": "lite-backend",
   "version": "0.0.1",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/ABucin/lite-backend.git"
@@ -8,6 +9,7 @@
   "scripts": {
     "start": "bin\\deploy_app.bat",
     "start-linux": "./bin/deploy_app.sh",
+    "test": "mocha tests/",
     "update": "npm update -g && npm update --save-dev"
   },
   "devDependencies": {
@@ -17,6 +19,7 @@
     "express": "*",
     "express-json": "*",
     "express-session": "*",
+    "mocha": "^2.1.0",
     "mongoose": "*",
     "passport": "*",
     "passport-local": "*",
