@@ -38,10 +38,10 @@ server.use(passport.initialize());
 server.use(passport.session());
 server.use(config.root, router);
 
-// Specify port and ip address of server
+// Specify port and ip address of src
 server.listen(config.port, config.ip);
 
-console.log('Application server started. Listening on port %s ...', config.port);
+console.log('Application src started. Listening on port %s ...', config.port);
 
 // Add default data to database.
 utils.populateDb();

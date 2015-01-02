@@ -13,6 +13,7 @@ Backend for the LITE project.
 * Node.js
   * express
   * passport
+  * mocha
 * MongoDB
 
 #### REST API

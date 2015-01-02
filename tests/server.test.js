@@ -5,8 +5,9 @@
 var superagent = require('superagent'),
     mongoose = require('mongoose'),
     expect = require('expect.js'),
-    config = require('./../config.json'),
-    User = require('../server/model/user'),
+    config = require('../config.json'),
+    User = require('../src/model/user'),
+    Log = require('../src/model/log'),
     baseURL = "http://localhost:" + config.port + config.root;
 
 describe('Server tests', function () {
@@ -20,7 +21,9 @@ describe('Server tests', function () {
     });
 
     beforeEach(function (done) {
-        new User({key: '1', email: 'test@test.com'}).save(function (err) {
+        var log = new Log({key: '1', username: 'test', targetType: "targetType", target: "target", action: "action"});
+
+        new User({key: '1', email: 'test@test.com', username: 'test', logs: [log]}).save(function (err) {
             if (err) {
                 return done(err);
             }
@@ -43,6 +46,18 @@ describe('Server tests', function () {
                 expect(res.body.length).to.eql(1);
                 expect(res.body[0].key).to.eql(key);
                 expect(res.body[0].email).to.eql('test@test.com');
+                done();
+            });
+    });
+
+    it('retrieve all logs', function (done) {
+        superagent.get(baseURL + '/logs')
+            .end(function (e, res) {
+                expect(e).to.eql(null);
+                expect(typeof res.body).to.eql('object');
+                console.log(res.body);
+                expect(res.body.length).to.eql(1);
+                expect(res.body[0].key).to.eql(key);
                 done();
             });
     });
