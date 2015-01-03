@@ -61,26 +61,22 @@ db.once('open', function () {
 utils.populateDb();
 
 /**
- * Authentication routes.
+ * Analytics routes.
  */
-router.route('/users/register')
-    .post(authService.register);
-
-router.route('/users/login')
-    .post(passport.authenticate('local'), authService.login);
-
-router.route('/users/logout')
-    .post(authService.logout);
+router.route('/analytics?:type')
+    .get(authService.isAuthenticated, analyticsService.getChart);
 
 /**
- * User routes.
+ * Authentication routes.
  */
-router.route('/users?:project')
-    .get(authService.isAuthenticated, usersService.getAllUsers);
+router.route('/auth/register')
+    .post(authService.register);
 
-router.route('/users/:userId')
-    .get(authService.isAuthenticated, usersService.getUser)
-    .put(authService.isAuthenticated, usersService.updateUser);
+router.route('/auth/login')
+    .post(passport.authenticate('local'), authService.login);
+
+router.route('/auth/logout')
+    .post(authService.logout);
 
 /**
  * Comment routes.
@@ -89,11 +85,32 @@ router.route('/tickets/:ticketId/comments')
     .get(authService.isAuthenticated, commentsService.getComments)
     .post(authService.isAuthenticated, commentsService.createComment);
 
-router.route('/tickets/:ticketId/comments/:commentId')
-    .put(authService.isAuthenticated, commentsService.updateComment);
-
 router.route('/comments/:commentId')
+    .put(authService.isAuthenticated, commentsService.updateComment)
     .delete(authService.isAuthenticated, commentsService.deleteComment);
+
+/**
+ * Log routes.
+ */
+router.route('/logs')
+    .get(authService.isAuthenticated, logsService.getAllLogs)
+    .post(authService.isAuthenticated, logsService.createLog);
+
+/**
+ * Project routes.
+ */
+router.route('/projects/:projectId')
+    .put(authService.isAuthenticated, projectsService.updateProject);
+
+/**
+ * Settings routes.
+ */
+router.route('/settings')
+    .get(authService.isAuthenticated, settingsService.getSettings)
+    .put(authService.isAuthenticated, settingsService.updateAllSettings);
+
+router.route('/settings/:settingId')
+    .put(authService.isAuthenticated, settingsService.updateSettings);
 
 /**
  * Ticket routes.
@@ -107,30 +124,11 @@ router.route('/tickets/:ticketId')
     .delete(authService.isAuthenticated, ticketsService.deleteTicket);
 
 /**
- * Log routes.
+ * User routes.
  */
-router.route('/logs')
-    .get(authService.isAuthenticated, logsService.getAllLogs)
-    .post(authService.isAuthenticated, logsService.createLog);
+router.route('/users?:project')
+    .get(authService.isAuthenticated, usersService.getAllUsers);
 
-/**
- * Analytics routes.
- */
-router.route('/analytics?:type')
-    .get(authService.isAuthenticated, analyticsService.getChart);
-
-/**
- * Settings routes.
- */
-router.route('/settings')
-    .get(authService.isAuthenticated, settingsService.getSettings)
-    .put(authService.isAuthenticated, settingsService.updateAllSettings);
-
-router.route('/settings/:settingId')
-    .put(authService.isAuthenticated, settingsService.updateSettings);
-
-/**
- * Project routes.
- */
-router.route('/projects/:projectId')
-    .put(authService.isAuthenticated, projectsService.updateProject);
+router.route('/users/:userId')
+    .get(authService.isAuthenticated, usersService.getUser)
+    .put(authService.isAuthenticated, usersService.updateUser);

@@ -85,14 +85,14 @@ exports.getComments = function (req, res) {
 exports.updateComment = function (req, res) {
     // save the comment and check for errors
     User.findOne({
-        'key': req.params.ticketId
+        'key': req.user.key
     }, function (err, user) {
         var errorResponse = [];
         if (err) {
             res.status(500).send(err);
         } else {
             _.each(user.comments, function (c) {
-                if (c.key == req.params.commentId && c.ticket == req.params.ticketId) {
+                if (c.key == req.params.commentId) {
 
                     if (req.body.content != null && req.body.content.length) {
                         c.content = req.body.content;

@@ -150,26 +150,6 @@ exports.populateDb = function () {
     var user = generateUser(123, usernames[0], usernames[0], "abucin@gmail.com", "Andrei", "Bucin", "admin", "tester", "issue-tracker", "Java, PHP, JavaScript, Web Design.", userTickets, userLogs, userComments, generateSettings()),
         user2 = generateUser(124, usernames[1], usernames[1], "psmith@gmail.com", "Peter", "Smith", "user", "developer", "unassigned", "JavaScript, HTML5, CSS3.", user2Tickets, user2Logs, user2Comments, generateSettings());
 
-    /**
-     * Password generation.
-     */
-
-        //user.setPassword(usernames[0], function () {
-        //	user.save(function (err) {
-        //		if (err) {
-        //			return console.error(err); // we should handle this
-        //		} else {
-        //			user2.setPassword(usernames[1], function () {
-        //				user2.save(function (err) {
-        //					if (err) {
-        //						return console.error(err); // we should handle this
-        //					}
-        //				});
-        //			});
-        //		}
-        //	});
-        //});
-
     user.save(function (err) {
         if (err) {
             return console.error(err); // we should handle this

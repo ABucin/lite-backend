@@ -14,6 +14,7 @@ Backend for the LITE project.
   * express
   * passport
   * mocha
+  * nodemon
 * MongoDB
 
 ### REST API
@@ -24,9 +25,17 @@ Every route is prefixed by **/itr/api** and secured using Basic authentication (
 
 /analytics?:type **[GET]**
 
+#### Authentication
+
+/auth/login **[POST]**
+
+/auth/logout **[POST]**
+
+/auth/register **[POST]**
+
 #### Comments
 
-/comments/:commentId **[DELETE]**
+/comments/:commentId **[PUT, DELETE]**
 
 #### Logs
 
@@ -50,8 +59,6 @@ Every route is prefixed by **/itr/api** and secured using Basic authentication (
 
 /tickets/:ticketId/comments **[GET, POST]**
 
-/tickets/:ticketId/comments/:commentId **[PUT]**
-
 #### Users
 
 /users **[GET]**
@@ -59,10 +66,3 @@ Every route is prefixed by **/itr/api** and secured using Basic authentication (
 /users?:project **[GET]**
 
 /users/:userId **[GET, PUT]**
-
-/users/login **[POST]**
-
-/users/logout **[POST]**
-
-/users/register **[POST]**
-

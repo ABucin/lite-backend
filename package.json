@@ -22,6 +22,7 @@
     "express-session": "*",
     "mocha": "^2.1.0",
     "mongoose": "*",
+    "nodemon": "^1.2.1",
     "passport": "*",
     "passport-http": "^0.2.2",
     "underscore": "*"

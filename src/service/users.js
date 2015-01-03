@@ -12,7 +12,7 @@ var getUsersWithProject = function (req, res) {
     });
 };
 
-var getUsers = function () {
+var getUsers = function (req, res) {
     User.find(function (err, users) {
         if (err) {
             res.status(500).send(err);
@@ -24,7 +24,7 @@ var getUsers = function () {
 
 exports.getAllUsers = function (req, res) {
     if (req.query.project === undefined) {
-        getUsers();
+        getUsers(req, res);
     } else {
         getUsersWithProject(req, res);
     }
