@@ -1,5 +1,5 @@
 /**
- * Required Express modules.
+ * Required Node modules.
  */
 var express = require('express'),
     bodyParser = require('body-parser'),
@@ -7,16 +7,16 @@ var express = require('express'),
     cors = require('cors'),
     session = require('express-session'),
     passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
     server = express(),
     router = express.Router(),
     /**
-     * Required JS files.
+     * Required app-specific modules.
      */
     config = require('./../config.json'),
     utils = require('./utils/population'),
     persistenceService = require('./service/persistence'),
     analyticsService = require('./service/analytics'),
+    authService = require('./service/auth'),
     User = require('./model/user');
 /**
  * Load Express modules.
@@ -41,19 +41,10 @@ server.use(config.root, router);
 // Specify port and ip address of src
 server.listen(config.port, config.ip);
 
-console.log('Application src started. Listening on port %s ...', config.port);
+console.log('Application server started. Listening on port %s ...', config.port);
 
 // Add default data to database.
 utils.populateDb();
-
-/**
- * Authentication config.
- */
-// use static authenticate method of model in LocalStrategy
-passport.use(new LocalStrategy(User.authenticate()));
-// use static serialize and deserialize of model for passport session support
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 /**
  * User routes.
@@ -75,7 +66,7 @@ router.route('/users/logout')
     });
 
 router.route('/users?:project')
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         if (req.query.project === undefined) {
             persistenceService.getAllUsers(res);
         } else {
@@ -84,10 +75,10 @@ router.route('/users?:project')
     });
 
 router.route('/users/:userId')
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getUser(req.params.userId, res);
     })
-    .put(function (req, res) {
+    .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateUser(req.params.userId, req.body, res);
     });
 
@@ -95,22 +86,22 @@ router.route('/users/:userId')
  * Comment routes.
  */
 router.route('/tickets/:ticketId/comments')
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getComments(req.params.ticketId, res);
     });
 
 router.route('/users/:userId/tickets/:ticketId/comments')
-    .post(function (req, res) {
+    .post(authService.isAuthenticated, function (req, res) {
         persistenceService.createComment(req.params.userId, req.params.ticketId, req.body, res);
     });
 
 router.route('/users/:userId/tickets/:ticketKey/comments/:commentId')
-    .put(function (req, res) {
+    .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateComment(req.params.commentId, req.params.ticketKey, req.params.userId, req.body, res);
     });
 
 router.route('/users/:userId/comments/:commentId')
-    .delete(function (req, res) {
+    .delete(authService.isAuthenticated, function (req, res) {
         persistenceService.deleteComment(req.params.commentId, req.params.userId, res);
     });
 
@@ -118,18 +109,18 @@ router.route('/users/:userId/comments/:commentId')
  * Ticket routes.
  */
 router.route('/users/:userId/tickets')
-    .post(function (req, res) {
+    .post(authService.isAuthenticated, function (req, res) {
         persistenceService.createTicket(req.params.userId, req.body, res);
     })
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getTickets(req.params.userId, res);
     });
 
 router.route('/tickets/:ticketId')
-    .put(function (req, res) {
+    .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateTicket(req.params.ticketId, req.body, res);
     })
-    .delete(function (req, res) {
+    .delete(authService.isAuthenticated, function (req, res) {
         persistenceService.deleteTicket(req.params.ticketId, res);
     });
 
@@ -137,12 +128,12 @@ router.route('/tickets/:ticketId')
  * Log routes.
  */
 router.route('/logs')
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getAllLogs(res);
     });
 
 router.route('/users/:userId/logs')
-    .post(function (req, res) {
+    .post(authService.isAuthenticated, function (req, res) {
         persistenceService.createLog(req.params.userId, req.body, res);
     });
 
@@ -150,7 +141,7 @@ router.route('/users/:userId/logs')
  * Analytics routes.
  */
 router.route('/analytics?:type')
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         analyticsService.getChart(req.query.type, res);
     });
 
@@ -158,17 +149,17 @@ router.route('/analytics?:type')
  * Settings routes.
  */
 router.route('/users/:userId/settings')
-    .get(function (req, res) {
+    .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getSettings(req.params.userId, res);
     });
 
 router.route('/settings')
-    .put(function (req, res) {
+    .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateAllSettings(req.body, res);
     });
 
 router.route('/users/:userId/settings/:settingId')
-    .put(function (req, res) {
+    .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateSettings(req.params.userId, req.params.settingId, req.body, res);
     });
 
@@ -176,6 +167,6 @@ router.route('/users/:userId/settings/:settingId')
  * Project routes.
  */
 router.route('/projects/:projectId')
-    .put(function (req, res) {
+    .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateProject(req.params.projectId, req.body, res);
     });
