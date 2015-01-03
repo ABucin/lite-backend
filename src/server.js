@@ -88,32 +88,30 @@ router.route('/users/:userId')
 router.route('/tickets/:ticketId/comments')
     .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getComments(req.params.ticketId, res);
-    });
-
-router.route('/users/:userId/tickets/:ticketId/comments')
+    })
     .post(authService.isAuthenticated, function (req, res) {
-        persistenceService.createComment(req.params.userId, req.params.ticketId, req.body, res);
+        persistenceService.createComment(req.user.key, req.params.ticketId, req.body, res);
     });
 
-router.route('/users/:userId/tickets/:ticketKey/comments/:commentId')
+router.route('/tickets/:ticketKey/comments/:commentId')
     .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateComment(req.params.commentId, req.params.ticketKey, req.params.userId, req.body, res);
+        persistenceService.updateComment(req.params.commentId, req.params.ticketKey, req.user.key, req.body, res);
     });
 
-router.route('/users/:userId/comments/:commentId')
+router.route('/comments/:commentId')
     .delete(authService.isAuthenticated, function (req, res) {
-        persistenceService.deleteComment(req.params.commentId, req.params.userId, res);
+        persistenceService.deleteComment(req.params.commentId, req.user.key, res);
     });
 
 /**
  * Ticket routes.
  */
-router.route('/users/:userId/tickets')
+router.route('/tickets')
     .post(authService.isAuthenticated, function (req, res) {
-        persistenceService.createTicket(req.params.userId, req.body, res);
+        persistenceService.createTicket(req.user.key, req.body, res);
     })
     .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getTickets(req.params.userId, res);
+        persistenceService.getTickets(req.user.key, res);
     });
 
 router.route('/tickets/:ticketId')
@@ -130,11 +128,9 @@ router.route('/tickets/:ticketId')
 router.route('/logs')
     .get(authService.isAuthenticated, function (req, res) {
         persistenceService.getAllLogs(res);
-    });
-
-router.route('/users/:userId/logs')
+    })
     .post(authService.isAuthenticated, function (req, res) {
-        persistenceService.createLog(req.params.userId, req.body, res);
+        persistenceService.createLog(req.user.key, req.body, res);
     });
 
 /**
@@ -148,19 +144,17 @@ router.route('/analytics?:type')
 /**
  * Settings routes.
  */
-router.route('/users/:userId/settings')
-    .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getSettings(req.params.userId, res);
-    });
-
 router.route('/settings')
+    .get(authService.isAuthenticated, function (req, res) {
+        persistenceService.getSettings(req.user.key, res);
+    })
     .put(authService.isAuthenticated, function (req, res) {
         persistenceService.updateAllSettings(req.body, res);
     });
 
-router.route('/users/:userId/settings/:settingId')
+router.route('/settings/:settingId')
     .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateSettings(req.params.userId, req.params.settingId, req.body, res);
+        persistenceService.updateSettings(req.user.key, req.params.settingId, req.body, res);
     });
 
 /**

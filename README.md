@@ -3,12 +3,12 @@ lite-backend
 
 Backend for the LITE project. 
 
-#### Pre-requisites:
+### Pre-requisites:
 
 1. Install Node.js from `http://nodejs.org/` .
 2. Install MongoDB from `http://www.mongodb.org/downloads` .
 
-#### Technology stack
+### Technology stack
 
 * Node.js
   * express
@@ -16,55 +16,53 @@ Backend for the LITE project.
   * mocha
 * MongoDB
 
-#### REST API
+### REST API
 
-Every route is prefixed by: **/itr/api**
+Every route is prefixed by **/itr/api** and secured using Basic authentication (will be OAuth2 in the future).
 
-###POST
-/users/register
+#### Analytics
 
-/users/login
+**/analytics?:type** [GET]
 
-/users/logout
+#### Comments
 
-/users/:userId/tickets/:ticketId/comments
+**/comments/:commentId** [DELETE]
 
-/users/:userId/tickets
+#### Logs
 
-/users/:userId/logs
+**/logs** [GET, POST]
 
-###GET
-/users
+#### Projects
 
-/users?:project
+**/projects/:projectId** [PUT]
 
-/users/:userId
+#### Settings
 
-/users/:userId/settings
+**/settings** [GET, PUT]
 
-/users/:userId/tickets
+**/settings/:settingId** [PUT]
 
-/tickets/:ticketId/comments
+#### Tickets
 
-/logs
+**/tickets** [GET, POST]
 
-/analytics?:type
+**/tickets/:ticketId** [PUT, DELETE]
 
-###PUT
-/users/:userId
+**/tickets/:ticketId/comments** [GET, POST]
 
-/users/:userId/tickets/:ticketId/comments/:commentId
+**/tickets/:ticketId/comments/:commentId** [PUT]
 
-/users/:userId/settings/:settingId
+#### Users
 
-/tickets/:ticketId
+**/users** [GET]
 
-/projects/:projectId
+**/users?:project** [GET]
 
-/settings
+**/users/:userId** [GET, PUT]
 
-###DELETE
-/users/:userId/comments/:commentId
+**/users/login** [POST]
 
-/tickets/:ticketId
+**/users/logout** [POST]
+
+**/users/register** [POST]
 
