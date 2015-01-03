@@ -5,6 +5,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     cors = require('cors'),
+    mongoose = require('mongoose'),
     session = require('express-session'),
     passport = require('passport'),
     server = express(),
@@ -14,10 +15,15 @@ var express = require('express'),
      */
     config = require('./../config.json'),
     utils = require('./utils/population'),
-    persistenceService = require('./service/persistence'),
     analyticsService = require('./service/analytics'),
     authService = require('./service/auth'),
-    User = require('./model/user');
+    commentsService = require('./service/comments'),
+    logsService = require('./service/logs'),
+    projectsService = require('./service/projects'),
+    settingsService = require('./service/settings'),
+    ticketsService = require('./service/tickets'),
+    usersService = require('./service/users');
+
 /**
  * Load Express modules.
  */
@@ -41,126 +47,90 @@ server.use(config.root, router);
 // Specify port and ip address of src
 server.listen(config.port, config.ip);
 
-console.log('Application server started. Listening on port %s ...', config.port);
+console.log('LITE backend server started. Listening on port %s ...', config.port);
+
+mongoose.connect(config.dbURI);
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log('Connection to DB established...');
+});
 
 // Add default data to database.
 utils.populateDb();
 
 /**
- * User routes.
+ * Authentication routes.
  */
 router.route('/users/register')
-    .post(function (req, res) {
-        persistenceService.register(req, res);
-    });
+    .post(authService.register);
 
 router.route('/users/login')
-    .post(passport.authenticate('local'), function (req, res) {
-        persistenceService.login(req.body.username, res);
-    });
+    .post(passport.authenticate('local'), authService.login);
 
 router.route('/users/logout')
-    .post(function (req, res) {
-        req.logout();
-        res.status(200).send();
-    });
+    .post(authService.logout);
 
+/**
+ * User routes.
+ */
 router.route('/users?:project')
-    .get(authService.isAuthenticated, function (req, res) {
-        if (req.query.project === undefined) {
-            persistenceService.getAllUsers(res);
-        } else {
-            persistenceService.getUsersWithProject(req.query.project, res);
-        }
-    });
+    .get(authService.isAuthenticated, usersService.getAllUsers);
 
 router.route('/users/:userId')
-    .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getUser(req.params.userId, res);
-    })
-    .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateUser(req.params.userId, req.body, res);
-    });
+    .get(authService.isAuthenticated, usersService.getUser)
+    .put(authService.isAuthenticated, usersService.updateUser);
 
 /**
  * Comment routes.
  */
 router.route('/tickets/:ticketId/comments')
-    .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getComments(req.params.ticketId, res);
-    })
-    .post(authService.isAuthenticated, function (req, res) {
-        persistenceService.createComment(req.user.key, req.params.ticketId, req.body, res);
-    });
+    .get(authService.isAuthenticated, commentsService.getComments)
+    .post(authService.isAuthenticated, commentsService.createComment);
 
-router.route('/tickets/:ticketKey/comments/:commentId')
-    .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateComment(req.params.commentId, req.params.ticketKey, req.user.key, req.body, res);
-    });
+router.route('/tickets/:ticketId/comments/:commentId')
+    .put(authService.isAuthenticated, commentsService.updateComment);
 
 router.route('/comments/:commentId')
-    .delete(authService.isAuthenticated, function (req, res) {
-        persistenceService.deleteComment(req.params.commentId, req.user.key, res);
-    });
+    .delete(authService.isAuthenticated, commentsService.deleteComment);
 
 /**
  * Ticket routes.
  */
 router.route('/tickets')
-    .post(authService.isAuthenticated, function (req, res) {
-        persistenceService.createTicket(req.user.key, req.body, res);
-    })
-    .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getTickets(req.user.key, res);
-    });
+    .post(authService.isAuthenticated, ticketsService.createTicket)
+    .get(authService.isAuthenticated, ticketsService.getTickets);
 
 router.route('/tickets/:ticketId')
-    .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateTicket(req.params.ticketId, req.body, res);
-    })
-    .delete(authService.isAuthenticated, function (req, res) {
-        persistenceService.deleteTicket(req.params.ticketId, res);
-    });
+    .put(authService.isAuthenticated, ticketsService.updateTicket)
+    .delete(authService.isAuthenticated, ticketsService.deleteTicket);
 
 /**
  * Log routes.
  */
 router.route('/logs')
-    .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getAllLogs(res);
-    })
-    .post(authService.isAuthenticated, function (req, res) {
-        persistenceService.createLog(req.user.key, req.body, res);
-    });
+    .get(authService.isAuthenticated, logsService.getAllLogs)
+    .post(authService.isAuthenticated, logsService.createLog);
 
 /**
  * Analytics routes.
  */
 router.route('/analytics?:type')
-    .get(authService.isAuthenticated, function (req, res) {
-        analyticsService.getChart(req.query.type, res);
-    });
+    .get(authService.isAuthenticated, analyticsService.getChart);
 
 /**
  * Settings routes.
  */
 router.route('/settings')
-    .get(authService.isAuthenticated, function (req, res) {
-        persistenceService.getSettings(req.user.key, res);
-    })
-    .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateAllSettings(req.body, res);
-    });
+    .get(authService.isAuthenticated, settingsService.getSettings)
+    .put(authService.isAuthenticated, settingsService.updateAllSettings);
 
 router.route('/settings/:settingId')
-    .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateSettings(req.user.key, req.params.settingId, req.body, res);
-    });
+    .put(authService.isAuthenticated, settingsService.updateSettings);
 
 /**
  * Project routes.
  */
 router.route('/projects/:projectId')
-    .put(authService.isAuthenticated, function (req, res) {
-        persistenceService.updateProject(req.params.projectId, req.body, res);
-    });
+    .put(authService.isAuthenticated, projectsService.updateProject);
