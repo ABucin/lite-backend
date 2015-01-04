@@ -28,7 +28,7 @@ exports.getAllLogs = function (req, res) {
         });
 };
 
-exports.createLog = function (userId, log, req, res) {
+exports.createLog = function (req, res) {
     var logData = {
         key: utils.generateKey(),
         action: req.body.action,
@@ -44,18 +44,16 @@ exports.createLog = function (userId, log, req, res) {
     User.findOne({
         'key': req.user.key
     }, function (err, user) {
-        if (err) {
+        if (err)
             res.status(500).send(err);
-        } else {
-            user.logs.push(new Log(logData));
 
-            user.save(function (err) {
-                if (err) {
-                    res.status(500).send(err);
-                } else {
-                    res.json(logData);
-                }
-            });
-        }
+        user.logs.push(new Log(logData));
+
+        user.save(function (err) {
+            if (err)
+                res.status(500).send(err);
+
+            res.json(logData);
+        });
     });
 };

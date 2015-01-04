@@ -72,11 +72,10 @@ exports.updateUser = function (req, res) {
             }
 
             user.save(function (err) {
-                if (err) {
+                if (err)
                     res.status(500).send(err);
-                } else {
-                    res.json(user);
-                }
+
+                res.json(user);
             });
         }
     });
