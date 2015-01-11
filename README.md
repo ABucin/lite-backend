@@ -23,7 +23,7 @@ Every route is prefixed by **/itr/api** and secured using Basic authentication (
 
 #### Analytics
 
-/analytics?:type **[GET]**
+/analytics?type={type} **[GET]**
 
 #### Authentication
 
@@ -35,34 +35,30 @@ Every route is prefixed by **/itr/api** and secured using Basic authentication (
 
 #### Comments
 
-/comments/:commentId **[PUT, DELETE]**
+/comments/{commentId} **[PUT, DELETE]**
 
 #### Logs
 
 /logs **[GET, POST]**
 
-#### Projects
-
-/projects/:projectId **[PUT]**
-
 #### Settings
 
 /settings **[GET, PUT]**
 
-/settings/:settingId **[PUT]**
+/settings/{settingId} **[PUT]**
 
 #### Tickets
 
 /tickets **[GET, POST]**
 
-/tickets/:ticketId **[PUT, DELETE]**
+/tickets/{ticketId} **[PUT, DELETE]**
 
-/tickets/:ticketId/comments **[GET, POST]**
+/tickets/{ticketId}/comments **[GET, POST]**
 
 #### Users
 
 /users **[GET]**
 
-/users?:project **[GET]**
+/users?project={project} **[GET]**
 
-/users/:userId **[GET, PUT]**
+/users/{userId} **[GET, PUT]**

@@ -29,17 +29,6 @@ exports.getAllLogs = function (req, res) {
 };
 
 exports.createLog = function (req, res) {
-    var logData = {
-        key: utils.generateKey(),
-        action: req.body.action,
-        target: req.body.target,
-        targetType: req.body.targetType,
-        comment: req.body.comment,
-        amount: req.body.amount,
-        username: req.body.username,
-        timestamp: new Date()
-    };
-
     // save the log and check for errors
     User.findOne({
         'key': req.user.key
@@ -47,13 +36,24 @@ exports.createLog = function (req, res) {
         if (err)
             res.status(500).send(err);
 
+        var logData = {
+            key: utils.generateKey(),
+            action: req.body.action,
+            target: req.body.target,
+            targetType: req.body.targetType,
+            comment: req.body.comment,
+            amount: req.body.amount,
+            username: req.body.username,
+            timestamp: new Date()
+        };
+
         user.logs.push(new Log(logData));
 
         user.save(function (err) {
             if (err)
                 res.status(500).send(err);
 
-            res.json(logData);
+            res.status(201).json(logData);
         });
     });
 };

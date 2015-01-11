@@ -151,15 +151,14 @@ exports.populateDb = function () {
         user2 = generateUser(124, usernames[1], usernames[1], "psmith@gmail.com", "Peter", "Smith", "user", "developer", "unassigned", "JavaScript, HTML5, CSS3.", user2Tickets, user2Logs, user2Comments, generateSettings());
 
     user.save(function (err) {
-        if (err) {
+        if (err)
             return console.error(err); // we should handle this
-        } else {
-            user2.save(function (err) {
-                if (err) {
-                    return console.error(err); // we should handle this
-                }
-            });
-        }
+
+        user2.save(function (err) {
+            if (err)
+                return console.error(err); // we should handle this
+        });
+
     });
 
     console.log('Data population complete...');

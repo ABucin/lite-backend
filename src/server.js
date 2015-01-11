@@ -19,7 +19,6 @@ var express = require('express'),
     authService = require('./service/auth'),
     commentsService = require('./service/comments'),
     logsService = require('./service/logs'),
-    projectsService = require('./service/projects'),
     settingsService = require('./service/settings'),
     ticketsService = require('./service/tickets'),
     usersService = require('./service/users');
@@ -95,12 +94,6 @@ router.route('/comments/:commentId')
 router.route('/logs')
     .get(authService.isAuthenticated, logsService.getAllLogs)
     .post(authService.isAuthenticated, logsService.createLog);
-
-/**
- * Project routes.
- */
-router.route('/projects/:projectId')
-    .put(authService.isAuthenticated, projectsService.updateProject);
 
 /**
  * Settings routes.
