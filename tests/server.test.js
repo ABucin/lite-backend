@@ -31,7 +31,6 @@ describe('Server tests', function () {
     beforeEach(function (done) {
         User.collection.drop();
 
-
         var log = new Log({key: '1', username: 'test', targetType: "targetType", target: "target", action: "action"}),
             settings = new Settings({key: '1', displayUserActivity: true, displayUserEmail: true}),
             settings2 = new Settings({key: '2', displayUserChart: true, displayUserRole: true}),
@@ -66,9 +65,8 @@ describe('Server tests', function () {
             settings: [settings],
             tickets: [ticket]
         }).save(function (err) {
-                if (err) {
+                if (err)
                     return done(err);
-                }
 
                 new User({
                     key: '2',
@@ -133,6 +131,38 @@ describe('Server tests', function () {
                         expect(user.firstName).to.eql('firstName');
                         expect(user.lastName).to.eql('lastName');
                     });
+
+                    done();
+                });
+        });
+
+        it('should allow existing user to login', function (done) {
+            superagent.post(baseURL + '/auth/login')
+                .set('Authorization', authHeader)
+                .send({
+                    username: 'test'
+                })
+                .end(function (e, res) {
+                    expect(e).to.eql(null);
+                    expect(typeof res.body).to.eql('object');
+                    expect(res.status).to.eql(200);
+                    expect(res.body.email).to.eql('test@test.com');
+                    expect(res.body.username).to.eql('test');
+                    expect(res.body.firstName).to.eql('John');
+                    expect(res.body.lastName).to.eql('Doe');
+
+                    done();
+                });
+        });
+
+        it('should allow existing user to logout', function (done) {
+            superagent.post(baseURL + '/auth/logout')
+                .set('Authorization', authHeader)
+                .send()
+                .end(function (e, res) {
+                    expect(e).to.eql(null);
+                    expect(typeof res.body).to.eql('object');
+                    expect(res.status).to.eql(200);
 
                     done();
                 });

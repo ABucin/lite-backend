@@ -72,7 +72,7 @@ router.route('/auth/register')
     .post(authService.register);
 
 router.route('/auth/login')
-    .post(passport.authenticate('local'), authService.login);
+    .post(authService.login);
 
 router.route('/auth/logout')
     .post(authService.logout);

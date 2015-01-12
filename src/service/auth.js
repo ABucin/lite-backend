@@ -5,27 +5,25 @@ var passport = require('passport'),
     utils = require('../utils/utils');
 
 /**
- * Authentication config.
+ * Configures the Passport module to allow the authentication of users.
  */
 passport.use(new BasicStrategy(
     function (username, password, done) {
         User.findOne({username: username}, function (err, user) {
-            if (err) {
+            if (err)
                 return done(err);
-            }
-            if (!user) {
+
+            if (!user)
                 return done(null, false);
-            }
+
             // Make sure the password is correct
             user.verifyPassword(password, function (err, isMatch) {
-                if (err) {
+                if (err)
                     return done(err);
-                }
 
                 // Password did not match
-                if (!isMatch) {
+                if (!isMatch)
                     return done(null, false);
-                }
 
                 // Success
                 return done(null, user);
@@ -87,22 +85,21 @@ exports.login = function (req, res) {
     User.findOne({
         'username': req.body.username
     }, function (err, user) {
-        if (err) {
+        if (err)
             res.status(500).send(err);
-        } else {
-            res.status(200).send({
-                key: user.key,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                projectRole: user.projectRole,
-                project: user.project,
-                expertise: user.expertise,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                settings: user.settings
-            });
-        }
+
+        res.status(200).send({
+            key: user.key,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            projectRole: user.projectRole,
+            project: user.project,
+            expertise: user.expertise,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            settings: user.settings
+        });
     });
 };
 
