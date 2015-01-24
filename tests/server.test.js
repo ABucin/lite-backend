@@ -18,7 +18,7 @@ describe('Server tests', function () {
     mongoose.connect(config.dbURI);
 
     var key = '1',
-        nonexistentKey = '999',
+        nonExistentKey = '999',
         db = mongoose.connection;
 
     db.once('open', function () {
@@ -348,8 +348,8 @@ describe('Server tests', function () {
                 });
         });
 
-        it.skip('should not update ticket if the given key is nonexistent', function (done) {
-            superagent.put(baseURL + '/tickets/' + nonexistentKey)
+        it('should not update ticket if the given key is nonexistent', function (done) {
+            superagent.put(baseURL + '/tickets/' + nonExistentKey)
                 .set('Authorization', authHeader)
                 .send({
                     title: 'updated ticket',
@@ -360,14 +360,27 @@ describe('Server tests', function () {
                 })
                 .end(function (e, res) {
                     expect(e).to.eql(null);
-                    console.log(res.body);
                     expect(typeof res.body).to.eql('object');
+		            expect(res.status).to.eql(404);
+
+		            User.findOne({
+			            'key': '1'
+		            }, function (err, user) {
+			            if (err)
+				            expect().fail(err);
+
+			            expect(user.tickets[0].title).to.eql('test ticket');
+			            expect(user.tickets[0].status).to.eql('open');
+			            expect(user.tickets[0].type).to.eql('bug');
+			            expect(user.tickets[0].description).to.eql('the test ticket');
+			            expect(user.tickets[0].owner).to.eql('test');
+		            });
 
                     done();
                 });
         });
 
-        it.skip('should delete ticket with the given key', function (done) {
+        it('should delete ticket with the given key', function (done) {
             superagent.del(baseURL + '/tickets/' + key)
                 .set('Authorization', authHeader)
                 .end(function (e, res) {
@@ -389,8 +402,8 @@ describe('Server tests', function () {
                 });
         });
 
-        it.skip('should not delete ticket if the given key is nonexistent', function (done) {
-            superagent.del(baseURL + '/tickets/' + nonexistentKey)
+        it('should not delete ticket if the given key is nonexistent', function (done) {
+            superagent.del(baseURL + '/tickets/' + nonExistentKey)
                 .set('Authorization', authHeader)
                 .end(function (e, res) {
                     expect(e).to.eql(null);
