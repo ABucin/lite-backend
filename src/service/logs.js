@@ -30,8 +30,8 @@ exports.getAllLogs = function (req, res) {
 
 exports.createLog = function (req, res) {
     // save the log and check for errors
-    User.findOne({
-        'key': req.user.key
+	User.findOne({
+        key: req.user.key
     }, function (err, user) {
         if (err)
             res.status(500).send(err);

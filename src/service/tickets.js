@@ -6,7 +6,7 @@ var Ticket = require('../model/ticket'),
 exports.createTicket = function (req, res) {
 	// save the ticket and check for errors
 	User.findOne({
-		'key': req.user.key
+		key: req.user.key
 	}, function (err, user) {
 		if (err) {
 			res.status(500).send(err);
@@ -55,7 +55,7 @@ exports.createTicket = function (req, res) {
 
 exports.getTickets = function (req, res) {
 	User.findOne({
-		'key': req.user.key
+		key: req.user.key
 	}, function (err, user) {
 		if (err)
 			res.status(500).send(err);
@@ -67,7 +67,7 @@ exports.getTickets = function (req, res) {
 exports.updateTicket = function (req, res) {
 	// save the ticket and check for errors
 	User.findOne({
-		'key': req.user.key
+		key: req.user.key
 	}, function (err, user) {
 		var validationErrors = [],
 			foundTicket = false;
@@ -125,7 +125,7 @@ exports.updateTicket = function (req, res) {
 
 exports.deleteTicket = function (req, res) {
 	User.findOne({
-		'key': req.user.key
+		key: req.user.key
 	}, function (err, user) {
 		var foundTicket = false;
 
