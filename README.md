@@ -19,7 +19,7 @@ Backend for the LITE project.
 
 ### REST API
 
-Every route is prefixed by **/itr/api** and secured using Basic authentication (will be OAuth2 in the future).
+Every route is prefixed by **/itr/api/v1** and secured using Basic authentication (will be OAuth2 in the future).
 
 #### Analytics
 

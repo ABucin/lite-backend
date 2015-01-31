@@ -11,7 +11,7 @@ var superagent = require('superagent'),
 	Log = require('../src/model/log'),
 	Ticket = require('../src/model/ticket'),
 	Comment = require('../src/model/comment'),
-	baseURL = "http://localhost:" + config.port + config.root,
+	baseURL = "http://localhost:" + config.port + config.root + config.apiVersion,
 	authHeader = 'Basic dGVzdDp0ZXN0',
 	authHeader2 = 'Basic dGVzdDI6dGVzdDI=';
 

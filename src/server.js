@@ -41,7 +41,7 @@ server.use(session({
 }));
 server.use(passport.initialize());
 server.use(passport.session());
-server.use(config.root, router);
+server.use(config.root + config.apiVersion, router);
 
 // Specify port and ip address of src
 server.listen(config.port, config.ip);
