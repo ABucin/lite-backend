@@ -289,7 +289,7 @@ describe('Server tests', function () {
 		it('should not be able to retrieve user with specified key if no authorization header is provided', function (done) {
 			superagent.get(baseURL + '/users/' + key)
 				.end(function (e, res) {
-					expect(e).to.eql(null);
+					expect(e).not.to.eql(null);
 					expect(res.body).to.be.an('object');
 					expect(res.body).to.be.empty();
 					done();
@@ -455,7 +455,7 @@ describe('Server tests', function () {
 					owner: 'test'
 				})
 				.end(function (e, res) {
-					expect(e).to.eql(null);
+					expect(e).not.to.eql(null);
 					expect(typeof res.body).to.eql('object');
 					expect(res.status).to.eql(404);
 
@@ -502,7 +502,7 @@ describe('Server tests', function () {
 			superagent.del(baseURL + '/tickets/' + nonExistentKey)
 				.set('Authorization', authHeader)
 				.end(function (e, res) {
-					expect(e).to.eql(null);
+					expect(e).not.to.eql(null);
 					expect(typeof res.body).to.eql('object');
 					expect(res.status).to.eql(404);
 

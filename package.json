@@ -20,6 +20,7 @@
     "express": "*",
     "express-json": "*",
     "express-session": "*",
+    "karma-phantomjs-launcher": "^0.1.4",
     "mocha": "^2.1.0",
     "mongoose": "*",
     "nodemon": "^1.2.1",
