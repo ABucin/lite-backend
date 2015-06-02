@@ -64,7 +64,7 @@ describe('Server tests', function () {
 			password: 'test',
 			project: "testProject",
 			logs: [log],
-			settings: [settings],
+			settings: settings,
 			tickets: [ticket],
 			comments: [comment]
 		}).save(function (err) {
@@ -78,7 +78,7 @@ describe('Server tests', function () {
 					password: 'test2',
 					project: "testProject2",
 					logs: [],
-					settings: [settings2],
+					settings: settings2,
 					tickets: [ticket2],
 					comments: []
 				}).save(done);
@@ -522,17 +522,17 @@ describe('Server tests', function () {
 					expect(typeof res.body).to.eql('object');
 					expect(res.status).to.eql(200);
 					expect(res.body.length).to.eql(1);
-					expect(res.body[0].key).to.eql('1');
-					expect(res.body[0].displayUserActivity).to.eql(true);
-					expect(res.body[0].displayUserEmail).to.eql(true);
-					expect(res.body[0].displayUserChart).to.eql(false);
-					expect(res.body[0].displayUserRole).to.eql(false);
+					expect(res.body.key).to.eql('1');
+					expect(res.body.displayUserActivity).to.eql(true);
+					expect(res.body.displayUserEmail).to.eql(true);
+					expect(res.body.displayUserChart).to.eql(false);
+					expect(res.body.displayUserRole).to.eql(false);
 					done();
 				});
 		});
 
-		it('should update setting with the given key', function (done) {
-			superagent.put(baseURL + '/settings/' + key)
+		it('should update setting for currently authenticated user', function (done) {
+			superagent.put(baseURL + '/settings')
 				.set('Authorization', authHeader)
 				.send({displayUserEmail: false})
 				.end(function (e, res) {
@@ -540,48 +540,11 @@ describe('Server tests', function () {
 					expect(typeof res.body).to.eql('object');
 					expect(res.status).to.eql(200);
 					expect(res.body.length).to.eql(1);
-					expect(res.body[0].key).to.eql('1');
-					expect(res.body[0].displayUserActivity).to.eql(true);
-					expect(res.body[0].displayUserEmail).to.eql(false);
-					expect(res.body[0].displayUserChart).to.eql(false);
-					expect(res.body[0].displayUserRole).to.eql(false);
-					done();
-				});
-		});
-
-		it('should update settings of all users', function (done) {
-			superagent.put(baseURL + '/settings')
-				.set('Authorization', authHeader)
-				.send({displayUserEmail: true, displayUserChart: true})
-				.end(function (e, res) {
-					expect(e).to.eql(null);
-					expect(typeof res.body).to.eql('object');
-					expect(res.status).to.eql(200);
-					expect(res.body.displayUserEmail).to.eql(true);
-					expect(res.body.displayUserChart).to.eql(true);
-
-					User.findOne({
-						key: '1'
-					}, function (err, user) {
-						if (err)
-							expect().fail(err);
-
-						expect(user.settings.length).to.eql(1);
-						expect(user.settings[0].displayUserEmail).to.eql(true);
-						expect(user.settings[0].displayUserChart).to.eql(true);
-					});
-
-					User.findOne({
-						key: '2'
-					}, function (err, user) {
-						if (err)
-							expect().fail(err);
-
-						expect(user.settings.length).to.eql(1);
-						expect(user.settings[0].displayUserEmail).to.eql(true);
-						expect(user.settings[0].displayUserChart).to.eql(true);
-					});
-
+					expect(res.body.key).to.eql('1');
+					expect(res.body.displayUserActivity).to.eql(true);
+					expect(res.body.displayUserEmail).to.eql(false);
+					expect(res.body.displayUserChart).to.eql(false);
+					expect(res.body.displayUserRole).to.eql(false);
 					done();
 				});
 		});

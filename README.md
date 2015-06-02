@@ -45,8 +45,6 @@ Every route is prefixed by **/itr/api/v1** and secured using Basic authenticatio
 
 /settings **[GET, PUT]**
 
-/settings/{settingId} **[PUT]**
-
 #### Tickets
 
 /tickets **[GET, POST]**

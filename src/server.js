@@ -25,13 +25,15 @@ var express = require('express'),
 	/**
 	 * Constants.
 	 */
-	AUTH_RESOURCE = "/auth",
-	SETTINGS_RESOURCE = "/settings",
-	TICKETS_RESOURCE = "/tickets",
-	USERS_RESOURCE = "/users",
-	COMMENTS_RESOURCE = "/comments",
-	ANALYTICS_RESOURCE = "/analytics",
-	LOGS_RESOURCE = "/logs";
+	RESOURCE = {
+		AUTH: "/auth",
+		SETTINGS: "/settings",
+		TICKETS: "/tickets",
+		USERS: "/users",
+		COMMENTS: "/comments",
+		ANALYTICS: "/analytics",
+		LOGS: "/logs"
+	};
 
 /**
  * Load Express modules.
@@ -72,66 +74,63 @@ utils.populateDb();
 /**
  * Analytics routes.
  */
-router.route(ANALYTICS_RESOURCE + '?:type')
+router.route(RESOURCE.ANALYTICS + '?:type')
 	.get(authService.isAuthenticated, analyticsService.getChart);
 
 /**
  * Authentication routes.
  */
-router.route(AUTH_RESOURCE + '/register')
+router.route(RESOURCE.AUTH + '/register')
 	.post(authService.register);
 
-router.route(AUTH_RESOURCE + '/login')
+router.route(RESOURCE.AUTH + '/login')
 	.post(authService.login);
 
-router.route(AUTH_RESOURCE + '/logout')
+router.route(RESOURCE.AUTH + '/logout')
 	.post(authService.logout);
 
 /**
  * Comment routes.
  */
-router.route(TICKETS_RESOURCE + '/:ticketId/comments')
+router.route(RESOURCE.TICKETS + '/:ticketId/comments')
 	.get(authService.isAuthenticated, commentsService.getComments)
 	.post(authService.isAuthenticated, commentsService.createComment);
 
-router.route(COMMENTS_RESOURCE + '/:commentId')
+router.route(RESOURCE.COMMENTS + '/:commentId')
 	.put(authService.isAuthenticated, commentsService.updateComment)
 	.delete(authService.isAuthenticated, commentsService.deleteComment);
 
 /**
  * Log routes.
  */
-router.route(LOGS_RESOURCE)
+router.route(RESOURCE.LOGS)
 	.get(authService.isAuthenticated, logsService.getAllLogs)
 	.post(authService.isAuthenticated, logsService.createLog);
 
 /**
  * Settings routes.
  */
-router.route(SETTINGS_RESOURCE)
+router.route(RESOURCE.SETTINGS)
 	.get(authService.isAuthenticated, settingsService.getSettings)
-	.put(authService.isAuthenticated, settingsService.updateAllSettings);
-
-router.route(SETTINGS_RESOURCE + '/:settingId')
 	.put(authService.isAuthenticated, settingsService.updateSettings);
 
 /**
  * Ticket routes.
  */
-router.route(TICKETS_RESOURCE)
+router.route(RESOURCE.TICKETS)
 	.post(authService.isAuthenticated, ticketsService.createTicket)
 	.get(authService.isAuthenticated, ticketsService.getTickets);
 
-router.route(TICKETS_RESOURCE + '/:ticketId')
+router.route(RESOURCE.TICKETS + '/:ticketId')
 	.put(authService.isAuthenticated, ticketsService.updateTicket)
 	.delete(authService.isAuthenticated, ticketsService.deleteTicket);
 
 /**
  * User routes.
  */
-router.route(USERS_RESOURCE + '?:project')
+router.route(RESOURCE.USERS + '?:project')
 	.get(authService.isAuthenticated, usersService.getAllUsers);
 
-router.route(USERS_RESOURCE + '/:userId')
+router.route(RESOURCE.USERS + '/:userId')
 	.get(authService.isAuthenticated, usersService.getUser)
 	.put(authService.isAuthenticated, usersService.updateUser);
