@@ -2,6 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SettingsSchema = new Schema({
+	_id: {
+		type: String
+	},
 	key: {
 		type: String,
 		required: true,

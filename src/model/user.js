@@ -8,6 +8,9 @@ var mongoose = require('mongoose'),
 	Settings = require('../model/settings');
 
 var UserSchema = new Schema({
+	_id: {
+		type: String
+	},
 	key: {
 		type: String,
 		required: true,
@@ -19,17 +22,12 @@ var UserSchema = new Schema({
 		required: true,
 		unique: true
 	},
-	firstName: {
-		type: String
-	},
-	lastName: {
-		type: String
-	},
-	username: {
-		type: String
-	},
+	firstName: String,
+	lastName: String,
+	username: String,
 	password: {
-		type: String
+		type: String,
+		select: false
 	},
 	role: {
 		type: String,
@@ -45,13 +43,14 @@ var UserSchema = new Schema({
 		type: String,
 		default: "unassigned"
 	},
-	expertise: {
-		type: String
-	},
+	expertise: String,
 	tickets: [Ticket.schema],
 	logs: [Log.schema],
 	comments: [Comment.schema],
-	settings: Settings.schema
+	settings: {
+		type: Schema.Types.ObjectId,
+		ref: "Settings"
+	}
 });
 
 // Execute before each user.save() call

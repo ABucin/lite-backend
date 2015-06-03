@@ -5,7 +5,8 @@
 /**
  * Dependent modules.
  */
-var utils = require('./utils'),
+var mongoose = require('mongoose'),
+	utils = require('./utils'),
 	Comment = require('../model/comment'),
 	Log = require('../model/log'),
 	Ticket = require('../model/ticket'),
@@ -77,13 +78,14 @@ exports.populateDb = function () {
 	 * Generates a settings object for a user.
 	 */
 	var generateSettings = function () {
-		return {
+		return new Settings({
+			_id: mongoose.Types.ObjectId(),
 			key: utils.generateKey(),
 			displayUserActivity: true,
 			displayUserChart: true,
 			displayUserEmail: true,
 			displayUserRole: true
-		};
+		});
 	};
 
 	/**
@@ -114,8 +116,9 @@ exports.populateDb = function () {
 		});
 	};
 
-	var generateUser = function (key, username, password, email, firstName, lastName, role, projectRole, project, expertise, tickets, logs, comments, settings) {
+	var generateUser = function (key, username, password, email, firstName, lastName, role, projectRole, project, expertise, tickets, logs, comments, settingsId) {
 		return new User({
+			_id: mongoose.Types.ObjectId(),
 			key: key,
 			username: username,
 			password: password,
@@ -127,8 +130,8 @@ exports.populateDb = function () {
 			project: project,
 			expertise: expertise,
 			tickets: tickets,
-			settings: settings,
 			logs: logs,
+			settings: settingsId,
 			comments: comments
 		});
 	};
@@ -160,18 +163,26 @@ exports.populateDb = function () {
 	generateLog(user2Logs, "clock-o", 4, "6", TICKET_TYPE.TASK, null, usernames[1]);
 	generateLog(user2Logs, "clock-o", 6, "6", TICKET_TYPE.TASK, null, usernames[1], yesterday);
 
-	var user = generateUser(123, usernames[0], usernames[0], "abucin@gmail.com", "Andrei", "Bucin", "admin", "tester", "issue-tracker", "Java, PHP, JavaScript, Web Design.", userTickets, userLogs, userComments, generateSettings()),
-		user2 = generateUser(124, usernames[1], usernames[1], "psmith@gmail.com", "Peter", "Smith", "user", "developer", "unassigned", "JavaScript, HTML5, CSS3.", user2Tickets, user2Logs, user2Comments, generateSettings());
+	var setting = generateSettings();
 
-	user.save(function (err) {
+	setting.save(function (err) {
+
 		if (err)
 			return console.error(err); // we should handle this
 
-		user2.save(function (err) {
+		var user = generateUser(123, usernames[0], usernames[0], "abucin@gmail.com", "Andrei", "Bucin", "admin", "tester", "issue-tracker", "Java, PHP, JavaScript, Web Design.", userTickets, userLogs, userComments, setting.id),
+			user2 = generateUser(124, usernames[1], usernames[1], "psmith@gmail.com", "Peter", "Smith", "user", "developer", "unassigned", "JavaScript, HTML5, CSS3.", user2Tickets, user2Logs, user2Comments, setting.id);
+
+		user.save(function (err) {
 			if (err)
 				return console.error(err); // we should handle this
-		});
 
+			user2.save(function (err) {
+				if (err)
+					return console.error(err); // we should handle this
+			});
+
+		});
 	});
 
 	console.log('Data population complete...');

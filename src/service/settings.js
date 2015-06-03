@@ -1,4 +1,5 @@
 var User = require('../model/user'),
+	Settings = require('../model/settings'),
 	_ = require('underscore')._;
 
 exports.getSettings = function (req, res) {
@@ -8,8 +9,15 @@ exports.getSettings = function (req, res) {
 		if (err)
 			res.status(500).send(err);
 
-		if (user)
-			res.json(user.settings);
+		if (user) {
+
+			Settings.findById(user.settings, function (err, setting) {
+				if (err)
+					res.status(500).send(err);
+
+				res.json(setting);
+			});
+		}
 	});
 };
 
@@ -20,13 +28,18 @@ exports.updateSettings = function (req, res) {
 		if (err)
 			res.status(500).send(err);
 
-		user.settings = req.body;
-
-		user.save(function (err) {
+		Settings.findById(user.settings, function (err, setting) {
 			if (err)
 				res.status(500).send(err);
 
-			res.json(user.settings);
+			setting = req.body;
+
+			setting.save(function (err) {
+				if (err)
+					res.status(500).send(err);
+
+				res.json(setting);
+			});
 		});
 	});
 };

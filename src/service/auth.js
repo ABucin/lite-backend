@@ -9,7 +9,7 @@ var passport = require('passport'),
  */
 passport.use(new BasicStrategy(
 	function (username, password, done) {
-		User.findOne({username: username}, function (err, user) {
+		User.findOne({username: username}, '+password', function (err, user) {
 			if (err)
 				return done(err);
 
@@ -42,39 +42,30 @@ exports.register = function (req, res) {
 		email: req.body.email,
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
-		settings: [{
+		settings: {
 			key: utils.generateKey(),
 			displayUserActivity: true,
 			displayUserChart: true,
 			displayUserEmail: true,
 			displayUserRole: true
-		}]
+		}
 	}).save(function (err) {
 			if (err) {
 				console.log("Registration error %s", err);
 				res.status(500).send(err);
 			} else {
 				passport.authenticate('local')(req, res, function () {
-					console.log("Registration successful. User %s authenticated.", req.body.username);
+					var username = req.body.username;
+
+					console.log("Registration successful. User %s authenticated.", username);
 					User.findOne({
-						'username': req.body.username
+						username: username
 					}, function (err, user) {
 						if (err) {
 							res.status(500).send(err);
-						} else {
-							res.status(201).send({
-								key: user.key,
-								username: user.username,
-								email: user.email,
-								role: user.role,
-								projectRole: user.projectRole,
-								project: user.project,
-								expertise: user.expertise,
-								firstName: user.firstName,
-								lastName: user.lastName,
-								settings: user.settings
-							});
 						}
+
+						res.status(201).send(user);
 					});
 				});
 			}
@@ -91,18 +82,7 @@ exports.login = function (req, res) {
 		if (!user)
 			res.status(401).send();
 
-		res.status(200).send({
-			key: user.key,
-			username: user.username,
-			email: user.email,
-			role: user.role,
-			projectRole: user.projectRole,
-			project: user.project,
-			expertise: user.expertise,
-			firstName: user.firstName,
-			lastName: user.lastName,
-			settings: user.settings
-		});
+		res.status(200).send(user);
 	});
 };
 
