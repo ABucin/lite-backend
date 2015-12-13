@@ -570,7 +570,7 @@ describe('Server tests', function () {
 
     describe('Settings resource tests', function () {
 
-        it('should retrieve settings for current user', function (done) {
+        it('should retrieve settings for currently authenticated user', function (done) {
             var id = "u1";
 
             superagent.get(baseURL + '/users/' + id + '/settings')
@@ -589,10 +589,9 @@ describe('Server tests', function () {
         });
 
         it('should update setting for currently authenticated user', function (done) {
-            var uid = "u1";
-            var id = "s1";
+            var id = "u1";
 
-            superagent.put(baseURL + '/users/' + uid + '/settings/' + id)
+            superagent.put(baseURL + '/users/' + id + '/settings')
                 .set('Authorization', authHeader)
                 .send({displayUserEmail: false})
                 .end(function (e, res) {

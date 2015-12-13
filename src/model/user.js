@@ -7,49 +7,20 @@ var mongoose = require('mongoose'),
     Settings = require('./settings');
 
 var UserSchema = new Schema({
-    _id: {
-        type: String
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    _id: {type: String},
+    email: {type: String, required: true, unique: true},
     firstName: String,
     lastName: String,
-    username: String,
-    password: {
-        type: String,
-        select: false
-    },
-    role: {
-        type: String,
-        default: "user"
-    },
-    projectRole: {
-        type: String,
-        default: "developer"
-    },
-    project: {
-        type: String,
-        default: "unassigned"
-    },
+    username: {type: String, required: true, unique: true},
+    password: {type: String, select: false},
+    role: {type: String, default: "user"},
+    projectRole: {type: String, default: "developer"},
+    project: {type: String, default: "unassigned"},
     expertise: String,
-    tickets: {
-        type: [Schema.Types.ObjectId],
-        ref: "Ticket"
-    },
-    logs: {
-        type: [Schema.Types.ObjectId],
-        ref: "Log"
-    },
-    comments: {
-        type: [Schema.Types.ObjectId],
-        ref: "Comment"
-    },
-    settings: {
-        type: Settings.schema
-    }
+    tickets: {type: [Schema.Types.ObjectId], ref: "Ticket"},
+    logs: {type: [Schema.Types.ObjectId], ref: "Log"},
+    comments: {type: [Schema.Types.ObjectId], ref: "Comment"},
+    settings: {type: Settings.schema}
 });
 
 // Execute before each user.save() call
@@ -72,6 +43,11 @@ UserSchema.pre('save', function (done) {
     });
 });
 
+/**
+ * Checks the provided password with the one stored for this user.
+ * @param password povided password
+ * @param done callback
+ */
 UserSchema.methods.verifyPassword = function (password, done) {
     bcrypt.compare(password, this.password, function (err, isMatch) {
         if (err) return done(err);

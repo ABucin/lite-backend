@@ -112,9 +112,7 @@ router.route(RESOURCE.USERS + '/:id/logs')
  * Settings routes.
  */
 router.route(RESOURCE.USERS + '/:id/settings')
-    .get(authService.isAuthenticated, settingsService.getSettings);
-
-router.route(RESOURCE.USERS + '/:userId/settings/:id')
+    .get(authService.isAuthenticated, settingsService.getSettings)
     .put(authService.isAuthenticated, settingsService.updateSettings);
 
 /**

@@ -1,49 +1,66 @@
-Every route is prefixed by: **/itr/api**
+REST paths
+============
 
-###POST
-/users/register
+Every route is prefixed by: `/itr/api`
 
-/users/login
+### Users
+##### GET
+`/users?:project` - retrieve users belonging to given project
 
-/users/logout
+`/users/:id` - retrieve user with id
 
-/users/:id/tickets/:ticketId/comments
+##### POST
+`/users/register`
 
-/users/:id/tickets
+`/users/login`
 
-/users/:id/logs
+`/users/logout`
 
-###GET
-/users
+##### PUT
+`/users/:id`
 
-/users?:project
+### Comments
+##### GET
+`/comments/:id`
 
-/users/:id
+##### POST
+`/users/:id/tickets/:ticketId/comments`
 
-/users/:id/settings
+##### PUT
+`/comments/:id`
 
-/users/:id/tickets
+##### DELETE
+`/comments/:id`
 
-/comments:id
+### Logs
+##### GET
+`/logs`
 
-/logs
+##### POST
+`/users/:id/logs`
 
-/analytics?:type
+### Tickets
+##### GET
+`/users/:id/tickets`
 
-###PUT
-/users/:id
+##### POST
+`/users/:id/tickets`
 
-/comments/:id
+##### PUT
+`/tickets/:id`
 
-/users/:userId/settings/:id
+##### DELETE
+`/tickets/:id`
 
-/users/:userId/tickets/:id
+### Settings
+##### GET
+`/users/:id/settings`
 
-/projects/:id
+##### PUT
+`/users/:id/settings`
 
-/settings
+### Analytics
+##### GET
+`/analytics?:type`
 
-###DELETE
-/comments/:id
 
-/tickets/:id
