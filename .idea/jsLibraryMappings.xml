@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$" libraries="{lite-backend node_modules}" />
-    <file url="PROJECT" libraries="{node_modules}" />
-    <includedPredefinedLibrary name="Node.js Globals" />
+    <file url="file://$PROJECT_DIR$/src" libraries="{Node.js Core, lite-backend node_modules, mongoose-DefinitelyTyped, passport-DefinitelyTyped}" />
+    <file url="file://$PROJECT_DIR$/src/model" libraries="{mongoose-DefinitelyTyped}" />
+    <file url="file://$PROJECT_DIR$/src/service" libraries="{mongoose-DefinitelyTyped}" />
+    <file url="file://$PROJECT_DIR$/src/utils" libraries="{mongoose-DefinitelyTyped}" />
+    <file url="file://$PROJECT_DIR$/tests" libraries="{Node.js Core, chai-DefinitelyTyped, chai-string-DefinitelyTyped, chai-subset-DefinitelyTyped, expect.js-DefinitelyTyped, jasmine-DefinitelyTyped, lite-backend node_modules, mocha-DefinitelyTyped, mongoose-DefinitelyTyped, superagent-DefinitelyTyped}" />
+    <file url="PROJECT" libraries="{chai-DefinitelyTyped, chai-string-DefinitelyTyped, chai-subset-DefinitelyTyped, expect.js-DefinitelyTyped, mocha-DefinitelyTyped, mongodb-DefinitelyTyped, mongoose-DefinitelyTyped, node_modules, passport-DefinitelyTyped, superagent-DefinitelyTyped}" />
   </component>
 </project>

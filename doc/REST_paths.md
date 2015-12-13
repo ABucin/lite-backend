@@ -7,43 +7,43 @@ Every route is prefixed by: **/itr/api**
 
 /users/logout
 
-/users/:userId/tickets/:ticketId/comments
+/users/:id/tickets/:ticketId/comments
 
-/users/:userId/tickets
+/users/:id/tickets
 
-/users/:userId/logs
+/users/:id/logs
 
 ###GET
 /users
 
 /users?:project
 
-/users/:userId
+/users/:id
 
-/users/:userId/settings
+/users/:id/settings
 
-/users/:userId/tickets
+/users/:id/tickets
 
-/tickets/:ticketId/comments
+/comments:id
 
 /logs
 
 /analytics?:type
 
 ###PUT
-/users/:userId
+/users/:id
 
-/users/:userId/tickets/:ticketId/comments/:commentId
+/comments/:id
 
-/users/:userId/settings/:settingId
+/users/:userId/settings/:id
 
-/tickets/:ticketId
+/users/:userId/tickets/:id
 
-/projects/:projectId
+/projects/:id
 
 /settings
 
 ###DELETE
-/users/:userId/comments/:commentId
+/comments/:id
 
-/tickets/:ticketId
+/tickets/:id

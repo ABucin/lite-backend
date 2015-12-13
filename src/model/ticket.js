@@ -2,10 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TicketSchema = new Schema({
-	key: {
-		type: String,
-		required: true,
-		unique: true
+	_id: {
+		type: String
 	},
 	code: {
 		type: Number,

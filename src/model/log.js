@@ -2,10 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({
-	key: {
-		type: String,
-		required: true,
-		unique: true
+	_id: {
+		type: String
 	},
 	action: {
 		type: String,
@@ -20,7 +18,8 @@ var LogSchema = new Schema({
 		required: true
 	},
 	comment: {
-		type: String
+		type: String,
+		default: ""
 	},
 	amount: {
 		type: Number,

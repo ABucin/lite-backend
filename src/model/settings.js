@@ -5,11 +5,6 @@ var SettingsSchema = new Schema({
 	_id: {
 		type: String
 	},
-	key: {
-		type: String,
-		required: true,
-		unique: true
-	},
 	displayUserActivity: {
 		type: Boolean,
 		default: false

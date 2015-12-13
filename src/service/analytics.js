@@ -11,7 +11,7 @@ exports.getChart = function (req, res) {
 	switch (req.query.type) {
 		case "loggedHours":
 		{
-			var callback = function (users) {
+			var callbackLoggedHours = function (users) {
 				var series = [];
 				var currentDate = new Date();
 
@@ -77,12 +77,12 @@ exports.getChart = function (req, res) {
 
 				res.json(loggedHours);
 			};
-			usersService.getAllUsersCallback(callback);
+			usersService.getAllUsersCallback(callbackLoggedHours);
 			break;
 		}
 		case "ticketCompletion":
 		{
-			var callback = function (users) {
+			var callbackTicketCompletion = function (users) {
 				var usernames = [];
 				var series = [{
 					name: 'Bug',
@@ -167,12 +167,12 @@ exports.getChart = function (req, res) {
 
 				res.json(ticketCompletion);
 			};
-			usersService.getAllUsersCallback(callback);
+			usersService.getAllUsersCallback(callbackTicketCompletion);
 			break;
 		}
 		case "effortEstimation":
 		{
-			var callback = function (users) {
+			var callbackEffortEstimation = function (users) {
 
 				var bugEffortEstimation = [],
 					taskEffortEstimation = [],
@@ -289,12 +289,12 @@ exports.getChart = function (req, res) {
 
 				res.json(effortEstimation);
 			};
-			usersService.getAllUsersCallback(callback);
+			usersService.getAllUsersCallback(callbackEffortEstimation);
 			break;
 		}
 		case "assignedTickets":
 		{
-			var callback = function (users) {
+			var callbackAssignedTickets = function (users) {
 				var data = [],
 					ut = 0;
 
@@ -353,7 +353,7 @@ exports.getChart = function (req, res) {
 
 				res.json(assignedTickets);
 			};
-			usersService.getAllUsersCallback(callback);
+			usersService.getAllUsersCallback(callbackAssignedTickets);
 			break;
 		}
 		default:
