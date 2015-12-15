@@ -2,7 +2,6 @@
 ### Node template
 # Logs
 logs
-*.log
 
 # Runtime data
 pids
