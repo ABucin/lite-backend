@@ -6,12 +6,6 @@ Every route is prefixed by: `/itr/api`.
 | Entity       | Action     | Path                                       | Description
 | -------------| -----------| -------------------------------------------| ------------------------------------------
 | Analytics    | `GET`      | `/analytics?{type}`                        | retrieve analytics with given type
-| Users        | `GET`      | `/users?{project}`                         | retrieve users belonging to given project
-|              |            | `/users/{id}`                              | retrieve user with id
-|              | `POST`     | `/users/register`                          | register a new user
-|              |            | `/users/login`                             | login a user
-|              |            | `/users/logout`                            | logout a user
-|              | `PUT`      | `/users/{id}`                              | update a user with the given id
 | Comments     | `GET`      | `/comments/{id}`                           | retrieve comment with given id
 |              | `POST`     | `/users/{id}/tickets/{ticketId}/comments`  | -
 |              | `PUT`      | `/comments/{id}`                           | update comment with given id
@@ -24,3 +18,9 @@ Every route is prefixed by: `/itr/api`.
 |              | `POST`     | `/users/{id}/tickets`                      | create ticket for use
 |              | `PUT`      | `/tickets/{id}`                            | update ticket with given id
 |              | `DELETE`   | `/tickets/{id}`                            | delete ticket with given id
+| Users        | `GET`      | `/users?{project}`                         | retrieve users belonging to given project
+|              |            | `/users/{id}`                              | retrieve user with id
+|              | `POST`     | `/users/register`                          | register a new user
+|              |            | `/users/login`                             | login a user
+|              |            | `/users/logout`                            | logout a user
+|              | `PUT`      | `/users/{id}`                              | update a user with the given id
