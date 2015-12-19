@@ -19,4 +19,4 @@ Backend for the LITE project.
 
 ### REST API
 
-See [REST API Documentation](./doc)
+See [REST API Documentation](./doc/REST_paths.md)
