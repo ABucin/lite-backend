@@ -12,28 +12,25 @@ exports.createComment = function (req, res) {
     });
 
     // save the comment and check for errors
-    User.findOne({
-        _id: req.params.id
-    }, function (err, user) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
+    User.findById(req.params.id,
+        function (err, user) {
+            if (err)
+                return res.status(500).send(err);
+
             comment.save(function (err) {
                 if (err)
-                    res.status(500).send(err);
-                else {
-                    user.comments.push(comment._id);
+                    return res.status(500).send(err);
 
-                    user.save(function (err) {
-                        if (err)
-                            res.status(500).send(err);
-                        else
-                            res.status(201).json(comment);
-                    });
-                }
+                user.comments.push(comment._id);
+
+                user.save(function (err) {
+                    if (err)
+                        return res.status(500).send(err);
+
+                    res.status(201).json(comment);
+                });
             });
-        }
-    });
+        });
 };
 
 exports.deleteComment = function (req, res) {
@@ -41,10 +38,9 @@ exports.deleteComment = function (req, res) {
         _id: req.params.id
     }, function (err) {
         if (err)
-            res.status(500).send(err);
-        else {
-            res.status(204).json();
-        }
+            return res.status(500).send(err);
+
+        res.status(204).json();
     });
 };
 
@@ -54,25 +50,23 @@ exports.deleteComment = function (req, res) {
  * @param res
  */
 exports.getComment = function (req, res) {
-    Comment.findOne({
-        _id: req.params.id
-    }, function (err, comment) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
+    Comment.findById(req.params.id,
+        function (err, comment) {
+            if (err)
+                return res.status(500).send(err);
+
             res.json(comment);
-        }
-    });
+        });
 };
 
 exports.updateComment = function (req, res) {
     // update the comment and check for errors
-    Comment.findOne({
-        _id: req.params.id
-    }, function (err, comment) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
+    Comment.findById(req.params.id,
+        function (err, comment) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
             if (req.body && req.body.content) {
                 comment.content = req.body.content;
                 comment.author = req.body.author;
@@ -81,11 +75,10 @@ exports.updateComment = function (req, res) {
 
             comment.save(function (err) {
                 if (err) {
-                    res.status(500).send(err);
-                } else {
-                    res.json(comment);
+                    return res.status(500).send(err);
                 }
+
+                res.json(comment);
             });
-        }
-    });
+        });
 };

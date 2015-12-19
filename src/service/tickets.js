@@ -5,17 +5,18 @@ var Ticket = require('../model/ticket'),
 
 exports.createTicket = function (req, res) {
     // save the ticket and check for errors
-    User.findOne({
-        _id: req.params.id
-    }, function (err, user) {
-        if (err) {
-            res.status(500).send(err);
-        } else if (user === null) {
-            res.status(404).send();
-        } else {
+    User.findById(req.params.id,
+        function (err, user) {
+            if (err)
+                return res.status(500).send(err);
+
+            if (user === null) {
+                return res.status(404).send();
+            }
+
             User.find(function (err, users) {
                 if (err)
-                    res.status(500).send(err);
+                    return res.status(500).send(err);
 
                 var tickets = [];
 
@@ -44,40 +45,37 @@ exports.createTicket = function (req, res) {
 
                 user.save(function (err) {
                     if (err)
-                        res.status(500).send(err);
+                        return res.status(500).send(err);
 
                     res.status(201).json(ticketData);
                 });
             });
-        }
-    });
+        });
 };
 
 exports.getTickets = function (req, res) {
     // TODO: remake this so it returns all ticket objects for user
-    User.findOne({
-        _id: req.params.id
-    }, function (err, user) {
-        if (err)
-            res.status(500).send(err);
-        else
+    User.findById(req.params.id,
+        function (err, user) {
+            if (err)
+                return res.status(500).send(err);
+
             res.json(user.tickets);
-    });
+        });
 };
 
 exports.updateTicket = function (req, res) {
     // save the ticket and check for errors
-    Ticket.findOne({
-        _id: req.params.id
-    }, function (err, ticket) {
-        var validationErrors = [];
+    Ticket.findById(req.params.id,
+        function (err, ticket) {
+            var validationErrors = [];
 
-        if (err)
-            res.status(500).send(err);
+            if (err)
+                return res.status(500).send(err);
 
-        else if (!ticket)
-            res.status(404).send();
-        else {
+            if (!ticket)
+                return res.status(404).send();
+
             if (req.body.title) {
                 ticket.title = req.body.title;
             }
@@ -109,17 +107,15 @@ exports.updateTicket = function (req, res) {
             ticket.type = req.body.type;
 
             if (validationErrors.length)
-                res.status(500).send(validationErrors);
+                return res.status(500).send(validationErrors);
 
             ticket.save(function (err) {
                 if (err)
-                    res.status(500).send(err);
+                    return res.status(500).send(err);
 
                 res.json(ticket);
             });
-        }
-
-    });
+        });
 };
 
 exports.deleteTicket = function (req, res) {
@@ -127,7 +123,7 @@ exports.deleteTicket = function (req, res) {
         _id: req.params.id
     }, function (err) {
         if (err)
-            res.status(500).send(err);
+            return res.status(500).send(err);
 
         res.status(204).json();
     });

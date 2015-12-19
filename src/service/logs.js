@@ -8,11 +8,10 @@ exports.getAllLogs = function (req, res) {
         .sort('-timestamp')
         .limit(LOG_LIMIT)
         .exec(function (err, logs) {
-            if (err) {
-                res.status(500).send(err);
-            } else {
-                res.json(logs);
-            }
+            if (err)
+                return res.status(500).send(err);
+
+            res.json(logs);
         });
 };
 
@@ -29,26 +28,23 @@ exports.createLog = function (req, res) {
     });
 
     // save the log and check for errors
-    User.findOne({
-        _id: req.params.id
-    }, function (err, user) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
+    User.findById(req.params.id,
+        function (err, user) {
+            if (err)
+                return res.status(500).send(err);
+
             log.save(function (err) {
                 if (err)
-                    res.status(500).send(err);
-                else {
-                    user.logs.push(log._id);
+                    return res.status(500).send(err);
 
-                    user.save(function (err) {
-                        if (err)
-                            res.status(500).send(err);
-                        else
-                            res.status(201).json(log);
-                    });
-                }
+                user.logs.push(log._id);
+
+                user.save(function (err) {
+                    if (err)
+                        return res.status(500).send(err);
+
+                    res.status(201).json(log);
+                });
             });
-        }
-    });
+        });
 };

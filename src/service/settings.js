@@ -5,10 +5,10 @@ exports.getSettings = function (req, res) {
     User.findById(req.params.id,
         function (err, user) {
             if (err)
-                res.status(500).send({message: "Failed to query user."});
+                return res.status(500).send({message: "Failed to query user."});
 
             if (!user)
-                res.status(404).send({message: "User not found."});
+                return res.status(404).send({message: "User not found."});
 
             res.json(user.settings);
         });
@@ -18,15 +18,15 @@ exports.updateSettings = function (req, res) {
     User.findById(req.params.id,
         function (err, user) {
             if (err)
-                res.status(500).send({message: "Failed to query user."});
+                return res.status(500).send({message: "Failed to query user."});
 
             if (!user)
-                res.status(404).send({message: "User not found."});
+                return res.status(404).send({message: "User not found."});
 
             Settings.findByIdAndUpdate(user.settings._id, {$set: req.body}, {new: true},
                 function (err, setting) {
                     if (err)
-                        res.status(500).send(err);
+                        return res.status(500).send(err);
 
                     res.json(setting);
                 });

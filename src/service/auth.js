@@ -52,23 +52,22 @@ exports.register = function (req, res) {
     }).save(function (err) {
         if (err) {
             console.log("Registration error '%s'", err);
-            res.status(500).send(err);
-        } else {
-            passport.authenticate('local')(req, res, function () {
-                var username = req.body.username;
-
-                console.log("Registration successful. User '%s' authenticated.", username);
-                User.findOne({
-                    username: username
-                }, function (err, user) {
-                    if (err) {
-                        res.status(500).send(err);
-                    }
-
-                    res.status(201).send(user);
-                });
-            });
+            return res.status(500).send(err);
         }
+
+        passport.authenticate('local')(req, res, function () {
+            var username = req.body.username;
+
+            console.log("Registration successful. User '%s' authenticated.", username);
+            User.findOne({
+                username: username
+            }, function (err, user) {
+                if (err)
+                    return res.status(500).send(err);
+
+                res.status(201).send(user);
+            });
+        });
     });
 };
 
@@ -77,10 +76,10 @@ exports.login = function (req, res) {
         'username': req.body.username
     }, function (err, user) {
         if (err)
-            res.status(500).send(err);
+            return res.status(500).send(err);
 
         if (!user)
-            res.status(401).send();
+            return res.status(401).send();
 
         res.status(200).send(user);
     });

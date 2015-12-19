@@ -4,21 +4,19 @@ var getUsersWithProject = function (req, res) {
     User.find({
         project: req.query.project
     }, function (err, users) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.json(users);
-        }
+        if (err)
+            return res.status(500).send(err);
+
+        res.json(users);
     });
 };
 
 var getUsers = function (req, res) {
     User.find(function (err, users) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.json(users);
-        }
+        if (err)
+            return res.status(500).send(err);
+
+        res.json(users);
     });
 };
 
@@ -37,27 +35,24 @@ exports.getAllUsersCallback = function (cb) {
 };
 
 exports.getUser = function (req, res) {
-    User.findOne({
-        _id: req.params.id
-    }, function (err, user) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
+    User.findById(req.params.id,
+        function (err, user) {
+            if (err)
+                return res.status(500).send(err);
+
             res.json([user]);
-        }
-    });
+        });
 };
 
 exports.updateUser = function (req, res) {
-    User.findOne({
-        _id: req.params.id
-    }, function (err, user) {
-        if (err) {
-            res.status(500).send(err);
-        }
-        if (!user) {
-            res.status(404).send();
-        } else {
+    User.findById(req.params.id,
+        function (err, user) {
+            if (err)
+                return res.status(500).send(err);
+
+            if (!user)
+                return res.status(404).send();
+
             if (req.body.project) {
                 user.project = req.body.project;
             }
@@ -76,10 +71,9 @@ exports.updateUser = function (req, res) {
 
             user.save(function (err) {
                 if (err)
-                    res.status(500).send(err);
+                    return res.status(500).send(err);
 
                 res.json(user);
             });
-        }
-    });
+        });
 };
