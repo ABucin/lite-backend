@@ -17,9 +17,9 @@ var UserSchema = new Schema({
     projectRole: {type: String, default: "developer"},
     project: {type: String, default: "unassigned"},
     expertise: String,
-    tickets: {type: [Schema.Types.ObjectId], ref: "Ticket"},
-    logs: {type: [Schema.Types.ObjectId], ref: "Log"},
-    comments: {type: [Schema.Types.ObjectId], ref: "Comment"},
+    _tickets: {type: [Schema.Types.ObjectId], ref: "Ticket"},
+    _logs: {type: [Schema.Types.ObjectId], ref: "Log"},
+    _comments: {type: [Schema.Types.ObjectId], ref: "Comment"},
     settings: {type: Settings.schema}
 });
 

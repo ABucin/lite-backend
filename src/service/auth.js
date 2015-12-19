@@ -1,7 +1,7 @@
 // Load required packages
 var passport = require('passport'),
     BasicStrategy = require('passport-http').BasicStrategy,
-    User = require('../model/user'),
+    User = new require('../model/user'),
     mongoose = require('mongoose');
 
 /**

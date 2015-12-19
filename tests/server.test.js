@@ -1,16 +1,12 @@
-/**
- * Created by ABucin on 28/12/2014.
- */
-
-var superagent = require('superagent'),
-    mongoose = require('mongoose'),
-    expect = require('expect.js'),
-    config = require('../config.json'),
-    User = require('../src/model/user'),
-    Settings = require('../src/model/settings'),
-    Log = require('../src/model/log'),
-    Ticket = require('../src/model/ticket'),
-    Comment = require('../src/model/comment'),
+var superagent = new require('superagent'),
+    mongoose = new require('mongoose'),
+    expect = new require('expect.js'),
+    config = new require('../config.json'),
+    User = new require('../src/model/user'),
+    Settings = new require('../src/model/settings'),
+    Log = new require('../src/model/log'),
+    Ticket = new require('../src/model/ticket'),
+    Comment = new require('../src/model/comment'),
     baseURL = "http://localhost:" + config.port + config.root + config.apiVersion,
     authHeader = 'Basic dGVzdDp0ZXN0',
     authHeader2 = 'Basic dGVzdDI6dGVzdDI=';
@@ -75,10 +71,10 @@ describe('Server tests', function () {
             lastName: "Doe",
             password: 'test',
             project: "testProject",
-            logs: [],
+            _logs: [],
             settings: setting1,
-            tickets: [ticket1._id],
-            comments: [comment1._id]
+            _tickets: [ticket1._id],
+            _comments: [comment1._id]
         });
         var user2 = new User({
             _id: "u2",
@@ -86,10 +82,10 @@ describe('Server tests', function () {
             username: 'test2',
             password: 'test2',
             project: "testProject2",
-            logs: [],
+            _logs: [],
             settings: setting2,
-            tickets: [ticket2._id],
-            comments: []
+            _tickets: [ticket2._id],
+            _comments: []
         });
 
         var users = [user1, user2];
@@ -172,17 +168,16 @@ describe('Server tests', function () {
 
                     var newUserId = res.body._id;
 
-                    User.findOne({
-                        _id: newUserId
-                    }, function (err, user) {
-                        if (err)
-                            expect().fail(err);
+                    User.findById(newUserId,
+                        function (err, user) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(user.email).to.eql('email@test.com');
-                        expect(user.username).to.eql('newUsername');
-                        expect(user.firstName).to.eql('firstName');
-                        expect(user.lastName).to.eql('lastName');
-                    });
+                            expect(user.email).to.eql('email@test.com');
+                            expect(user.username).to.eql('newUsername');
+                            expect(user.firstName).to.eql('firstName');
+                            expect(user.lastName).to.eql('lastName');
+                        });
 
                     done();
                 });
@@ -223,7 +218,7 @@ describe('Server tests', function () {
 
     describe('Comment resource tests', function () {
 
-        xit('should retrieve comment with specified id', function (done) {
+        it('should retrieve comment with specified id', function (done) {
             var id = "c1";
 
             superagent.get(baseURL + '/comments/' + id)
@@ -246,7 +241,7 @@ describe('Server tests', function () {
 
             superagent.post(baseURL + '/users/' + userId + '/tickets/' + ticketId + '/comments')
                 .set('Authorization', authHeader)
-                .send({ticket: '1', content: 'comment2', author: 'test2'})
+                .send({ticket: 't1', content: 'comment2', author: 'test2'})
                 .end(function (e, res) {
                     expect(e).to.eql(null);
                     expect(typeof res.body).to.eql('object');
@@ -255,20 +250,19 @@ describe('Server tests', function () {
                     expect(res.body.content).to.eql('comment2');
                     expect(res.body.author).to.eql('test2');
 
-                    User.findOne({
-                        _id: "u1"
-                    }, function (err, user) {
-                        if (err)
-                            expect().fail(err);
+                    User.findById("u1",
+                        function (err, user) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(user.comments.length).to.eql(2);
-                    });
+                            expect(user.comments.length).to.eql(2);
+                        });
 
                     done();
                 });
         });
 
-        xit('should update the comment with the given id', function (done) {
+        it('should update the comment with the given id', function (done) {
             var id = "c1";
 
             superagent.put(baseURL + '/comments/' + id)
@@ -284,18 +278,17 @@ describe('Server tests', function () {
                     expect(res.body.author).to.eql('updatedTest2');
                     expect(res.body.isEdited).to.eql(true);
 
-                    Comment.findOne({
-                        _id: id
-                    }, function (err, comment) {
-                        if (err)
-                            expect().fail(err);
+                    Comment.findById(id,
+                        function (err, comment) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(comment._id).to.eql('c1');
-                        expect(comment.ticket).to.eql('1');
-                        expect(comment.content).to.eql('updatedComment2');
-                        expect(res.body.author).to.eql('updatedTest2');
-                        expect(comment.isEdited).to.eql(true);
-                    });
+                            expect(comment._id).to.eql('c1');
+                            expect(comment.ticket).to.eql('1');
+                            expect(comment.content).to.eql('updatedComment2');
+                            expect(comment.author).to.eql('updatedTest2');
+                            expect(comment.isEdited).to.eql(true);
+                        });
 
                     done();
                 });
@@ -312,14 +305,13 @@ describe('Server tests', function () {
                     expect(res.body).to.be.an('object');
                     expect(res.body).to.be.empty();
 
-                    User.findOne({
-                        _id: 'u1'
-                    }, function (err, user) {
-                        if (err)
-                            expect().fail(err);
+                    User.findById('u1',
+                        function (err, user) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(user.comments.length).to.be(0);
-                    });
+                            expect(user._comments.length).to.be(0);
+                        });
 
                     done();
                 });
@@ -451,18 +443,17 @@ describe('Server tests', function () {
                     expect(res.body.description).to.eql('the new ticket');
                     expect(res.body.owner).to.eql('test');
 
-                    User.findOne({
-                        _id: 'u1'
-                    }, function (err, user) {
-                        if (err)
-                            expect().fail(err);
+                    User.findById('u1',
+                        function (err, user) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(user.tickets[1].title).to.eql('new ticket');
-                        expect(user.tickets[1].status).to.eql('created');
-                        expect(user.tickets[1].type).to.eql('task');
-                        expect(user.tickets[1].description).to.eql('the new ticket');
-                        expect(user.tickets[1].owner).to.eql('test');
-                    });
+                            expect(user._tickets[1].title).to.eql('new ticket');
+                            expect(user._tickets[1].status).to.eql('created');
+                            expect(user._tickets[1].type).to.eql('task');
+                            expect(user._tickets[1].description).to.eql('the new ticket');
+                            expect(user._tickets[1].owner).to.eql('test');
+                        });
 
                     done();
                 });
@@ -490,19 +481,18 @@ describe('Server tests', function () {
                     expect(res.body.description).to.eql('the updated ticket');
                     expect(res.body.owner).to.eql('test');
 
-                    User.findOne({
-                        _id: 'u1'
-                    }, function (err, user) {
-                        if (err)
-                            expect().fail(err);
+                    User.findOne('u1',
+                        function (err, user) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(user.tickets.length).to.be(1);
-                        expect(user.tickets[0].title).to.eql('updated ticket');
-                        expect(user.tickets[0].status).to.eql('closed');
-                        expect(user.tickets[0].type).to.eql('task');
-                        expect(user.tickets[0].description).to.eql('the updated ticket');
-                        expect(user.tickets[0].owner).to.eql('test');
-                    });
+                            expect(user._tickets.length).to.be(1);
+                            expect(user._tickets[0].title).to.eql('updated ticket');
+                            expect(user._tickets[0].status).to.eql('closed');
+                            expect(user._tickets[0].type).to.eql('task');
+                            expect(user._tickets[0].description).to.eql('the updated ticket');
+                            expect(user._tickets[0].owner).to.eql('test');
+                        });
 
                     done();
                 });
@@ -540,14 +530,13 @@ describe('Server tests', function () {
                     expect(res.status).to.eql(204);
                     expect(res.body).to.be.empty();
 
-                    Ticket.findOne({
-                        _id: 't1'
-                    }, function (err, ticket) {
-                        if (err)
-                            expect().fail(err);
+                    Ticket.findById('t1',
+                        function (err, ticket) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(ticket).to.eql(null);
-                    });
+                            expect(ticket).to.eql(null);
+                        });
 
                     done();
                 });
@@ -648,14 +637,13 @@ describe('Server tests', function () {
                     expect(res.body.amount).to.eql(1);
                     expect(res.body.username).to.eql('test2');
 
-                    User.findOne({
-                        _id: 'u1'
-                    }, function (err, user) {
-                        if (err)
-                            expect().fail(err);
+                    User.findById('u1',
+                        function (err, user) {
+                            if (err)
+                                expect().fail(err);
 
-                        expect(user.logs.length).to.eql(1);
-                    });
+                            expect(user.logs.length).to.eql(1);
+                        });
 
                     done();
                 });

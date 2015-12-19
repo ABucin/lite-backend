@@ -21,7 +21,7 @@ exports.createComment = function (req, res) {
                 if (err)
                     return res.status(500).send(err);
 
-                user.comments.push(comment._id);
+                user._comments.push(comment._id);
 
                 user.save(function (err) {
                     if (err)

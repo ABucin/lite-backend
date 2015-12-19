@@ -1,5 +1,5 @@
-var Ticket = require('../model/ticket'),
-    User = require('../model/user'),
+var Ticket = new require('../model/ticket'),
+    User = new require('../model/user'),
     mongoose = require('mongoose'),
     _ = require('underscore')._;
 
@@ -10,7 +10,7 @@ exports.createTicket = function (req, res) {
             if (err)
                 return res.status(500).send(err);
 
-            if (user === null) {
+            if (!user) {
                 return res.status(404).send();
             }
 
@@ -20,8 +20,8 @@ exports.createTicket = function (req, res) {
 
                 var tickets = [];
 
-                _.each(users, function (e) {
-                    tickets = _.union(tickets, e.tickets);
+                _.each(users, function (user) {
+                    tickets = _.union(tickets, user._tickets);
                 });
 
                 var latestTicket = _.max(tickets, function (ticket) {
@@ -41,7 +41,7 @@ exports.createTicket = function (req, res) {
                         code: latestTicket.code + 1
                     };
 
-                user.tickets.push(new Ticket(ticketData));
+                user._tickets.push(new Ticket(ticketData));
 
                 user.save(function (err) {
                     if (err)
@@ -60,7 +60,7 @@ exports.getTickets = function (req, res) {
             if (err)
                 return res.status(500).send(err);
 
-            res.json(user.tickets);
+            res.json(user._tickets);
         });
 };
 

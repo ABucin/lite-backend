@@ -1,4 +1,4 @@
-var User = require('../model/user');
+var User = new require('../model/user');
 
 var getUsersWithProject = function (req, res) {
     User.find({
@@ -56,15 +56,19 @@ exports.updateUser = function (req, res) {
             if (req.body.project) {
                 user.project = req.body.project;
             }
+
             if (req.body.firstName) {
                 user.firstName = req.body.firstName;
             }
+
             if (req.body.lastName) {
                 user.lastName = req.body.lastName;
             }
+
             if (req.body.email) {
                 user.email = req.body.email;
             }
+
             if (req.body.expertise) {
                 user.expertise = req.body.expertise;
             }

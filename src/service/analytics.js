@@ -3,8 +3,8 @@ var bugColor = "#CB1F26",
 	chartFontWeight = "300",
 	chartFontSize = "16px";
 
-var utils = require('../utils/utils'),
-	usersService = require('../service/users'),
+var Utils = require('../utils/utils'),
+	UsersService = require('../service/users'),
 	_ = require('underscore')._;
 
 exports.getChart = function (req, res) {
@@ -17,9 +17,9 @@ exports.getChart = function (req, res) {
 
 				_.each(users, function (user) {
 					var logged = [0, 0, 0, 0, 0, 0, 0];
-					_.each(user.logs, function (log) {
+					_.each(user._logs, function (log) {
 						var tstamp = log.timestamp;
-						if (tstamp && utils.getWeekNumber(currentDate) === utils.getWeekNumber(tstamp)) {
+						if (tstamp && Utils.getWeekNumber(currentDate) === Utils.getWeekNumber(tstamp)) {
 							var day = tstamp.getDay();
 							logged[day] += log.amount;
 						}
@@ -77,7 +77,7 @@ exports.getChart = function (req, res) {
 
 				res.json(loggedHours);
 			};
-			usersService.getAllUsersCallback(callbackLoggedHours);
+			UsersService.getAllUsersCallback(callbackLoggedHours);
 			break;
 		}
 		case "ticketCompletion":
@@ -97,7 +97,7 @@ exports.getChart = function (req, res) {
 					var bt = 0,
 						tt = 0;
 
-					_.each(user.tickets, function (ticket) {
+					_.each(user._tickets, function (ticket) {
 						if (ticket.status === "done" && ticket.owner === user.username) {
 							if (ticket.type === "bug") {
 								bt++;
@@ -167,7 +167,7 @@ exports.getChart = function (req, res) {
 
 				res.json(ticketCompletion);
 			};
-			usersService.getAllUsersCallback(callbackTicketCompletion);
+			UsersService.getAllUsersCallback(callbackTicketCompletion);
 			break;
 		}
 		case "effortEstimation":
@@ -179,7 +179,7 @@ exports.getChart = function (req, res) {
 					maxEstimation = 0;
 
 				_.each(users, function (user) {
-					_.each(user.tickets, function (ticket) {
+					_.each(user._tickets, function (ticket) {
 						if (ticket.status !== "done") {
 							if (ticket.estimatedTime > maxEstimation) {
 								maxEstimation = ticket.estimatedTime;
@@ -289,7 +289,7 @@ exports.getChart = function (req, res) {
 
 				res.json(effortEstimation);
 			};
-			usersService.getAllUsersCallback(callbackEffortEstimation);
+			UsersService.getAllUsersCallback(callbackEffortEstimation);
 			break;
 		}
 		case "assignedTickets":
@@ -300,7 +300,7 @@ exports.getChart = function (req, res) {
 
 				_.each(users, function (user) {
 					var ct = 0;
-					_.each(user.tickets, function (ticket) {
+					_.each(user._tickets, function (ticket) {
 						if (ticket.status !== "done") {
 							if (ticket.owner === user.username) {
 								ct++;
@@ -353,7 +353,7 @@ exports.getChart = function (req, res) {
 
 				res.json(assignedTickets);
 			};
-			usersService.getAllUsersCallback(callbackAssignedTickets);
+			UsersService.getAllUsersCallback(callbackAssignedTickets);
 			break;
 		}
 		default:

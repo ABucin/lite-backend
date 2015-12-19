@@ -1,5 +1,5 @@
-var User = require('../model/user'),
-    Settings = require('../model/settings');
+var User = new require('../model/user'),
+    Settings = new require('../model/settings');
 
 exports.getSettings = function (req, res) {
     User.findById(req.params.id,

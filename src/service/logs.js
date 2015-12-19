@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
-    Log = require('../model/log'),
-    User = require('../model/user'),
+    Log = new require('../model/log'),
+    User = new require('../model/user'),
     LOG_LIMIT = 10;
 
 exports.getAllLogs = function (req, res) {
@@ -37,7 +37,7 @@ exports.createLog = function (req, res) {
                 if (err)
                     return res.status(500).send(err);
 
-                user.logs.push(log._id);
+                user._logs.push(log._id);
 
                 user.save(function (err) {
                     if (err)

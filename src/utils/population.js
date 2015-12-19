@@ -1,16 +1,17 @@
 /**
  * This script populates the issue tracker database with some dummy data so that its functionality can be tested.
+ * @module population
  */
 
 /**
  * Dependent modules.
  */
 var mongoose = require('mongoose'),
-    Comment = require('../model/comment'),
-    Log = require('../model/log'),
-    Ticket = require('../model/ticket'),
-    User = require('../model/user'),
-    Settings = require('../model/settings');
+    Comment = new require('../model/comment'),
+    Log = new require('../model/log'),
+    Ticket = new require('../model/ticket'),
+    User = new require('../model/user'),
+    Settings = new require('../model/settings');
 
 /**
  * Main DB population method.
@@ -96,7 +97,7 @@ exports.populateDb = function () {
     var generateComment = function (user, content, author, ticketKey) {
         var id = mongoose.Types.ObjectId();
 
-        user.comments.push(id);
+        user._comments.push(id);
 
         comments.push(
             new Comment({
@@ -136,10 +137,10 @@ exports.populateDb = function () {
             projectRole: projectRole,
             project: project,
             expertise: expertise,
-            tickets: tickets,
-            logs: logs,
+            _tickets: tickets,
+            _logs: logs,
             settings: settings,
-            comments: []
+            _comments: []
         });
 
         users.push(user);
@@ -179,21 +180,18 @@ exports.populateDb = function () {
     generateComment(users[1], "Also, please update the title to something more accurate.", usernames[1], tickets[8]._id);
 
     Ticket.create(tickets, function (err) {
-        if (err) {
+        if (err)
             return console.error(err);
-        }
     });
 
     Comment.create(comments, function (err) {
-        if (err) {
+        if (err)
             return console.error(err);
-        }
     });
 
     User.create(users, function (err) {
-        if (err) {
+        if (err)
             return console.error(err);
-        }
     });
 
     console.log('Data population complete...');
