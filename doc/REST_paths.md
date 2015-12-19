@@ -1,26 +1,24 @@
 REST paths
 ============
 
-Every route is prefixed by: `/itr/api`.
-
 | Entity       | Action     | Path                                       | Description
 | -------------| -----------| -------------------------------------------| ------------------------------------------
-| Analytics    | `GET`      | `/analytics?{type}`                        | retrieve analytics with given type
-| Comments     | `GET`      | `/comments/{id}`                           | retrieve comment with given id
-|              | `POST`     | `/users/{id}/tickets/{ticketId}/comments`  | -
-|              | `PUT`      | `/comments/{id}`                           | update comment with given id
-|              | `DELETE`   | `/comments/{id}`                           | delete comment with given id
-| Logs         | `GET`      | `/logs`                                    | retrieve all logs
-|              | `POST`     | `/users/{id}/logs`                         | add log entry
-| Settings     | `GET`      | `/users/{id}/settings`                     | retrieve settings for user with given id
-|              | `PUT`      | `/users/{id}/settings`                     | update settings for user with given id
-| Tickets      | `GET`      | `/users/{id}/tickets`                      | retrieve tickets for user
-|              | `POST`     | `/users/{id}/tickets`                      | create ticket for use
-|              | `PUT`      | `/tickets/{id}`                            | update ticket with given id
-|              | `DELETE`   | `/tickets/{id}`                            | delete ticket with given id
-| Users        | `GET`      | `/users?{project}`                         | retrieve users belonging to given project
-|              |            | `/users/{id}`                              | retrieve user with id
-|              | `POST`     | `/users/register`                          | register a new user
-|              |            | `/users/login`                             | login a user
-|              |            | `/users/logout`                            | logout a user
-|              | `PUT`      | `/users/{id}`                              | update a user with the given id
+| Analytics    | `GET`      | `/itr/api/analytics?{type}`                        | retrieve analytics with given type
+| Comments     | `GET`      | `/itr/api/comments/{id}`                           | retrieve comment with given id
+|              | `POST`     | `/itr/api/users/{id}/tickets/{ticketId}/comments`  | -
+|              | `PUT`      | `/itr/api/comments/{id}`                           | update comment with given id
+|              | `DELETE`   | `/itr/api/comments/{id}`                           | delete comment with given id
+| Logs         | `GET`      | `/itr/api/logs`                                    | retrieve all logs
+|              | `POST`     | `/itr/api/users/{id}/logs`                         | add log entry
+| Settings     | `GET`      | `/itr/api/users/{id}/settings`                     | retrieve settings for user with given id
+|              | `PUT`      | `/itr/api/users/{id}/settings`                     | update settings for user with given id
+| Tickets      | `GET`      | `/itr/api/users/{id}/tickets`                      | retrieve tickets for user
+|              | `POST`     | `/itr/api/users/{id}/tickets`                      | create ticket for use
+|              | `PUT`      | `/itr/api/tickets/{id}`                            | update ticket with given id
+|              | `DELETE`   | `/itr/api/tickets/{id}`                            | delete ticket with given id
+| Users        | `GET`      | `/itr/api/users?{project}`                         | retrieve users belonging to given project
+|              |            | `/itr/api/users/{id}`                              | retrieve user with id
+|              | `POST`     | `/itr/api/users/register`                          | register a new user
+|              |            | `/itr/api/users/login`                             | login a user
+|              |            | `/itr/api/users/logout`                            | logout a user
+|              | `PUT`      | `/itr/api/users/{id}`                              | update a user with the given id

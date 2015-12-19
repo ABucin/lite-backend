@@ -1,8 +1,8 @@
 {
   "port": 3000,
-  "ip": "0.0.0.0",
-  "root": "/itr/api",
-  "apiVersion": "/v1",
+  "host": "http://localhost",
+  "root": "/itr/api/",
+  "version": "v1",
   "secret": "SECRET",
-  "dbURI": "mongodb://localhost/issuetracker"
+  "db": "mongodb://localhost/issuetracker"
 }

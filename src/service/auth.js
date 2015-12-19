@@ -1,8 +1,10 @@
 // Load required packages
-var passport = require('passport'),
-    BasicStrategy = require('passport-http').BasicStrategy,
-    User = new require('../model/user'),
-    mongoose = require('mongoose');
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+var User = new require('../model/user');
+var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken');
+var config = new require('./../../config.json');
 
 /**
  * Configures the Passport module to allow the authentication of users.
@@ -36,7 +38,7 @@ passport.use(new BasicStrategy(
  * Authentication.
  */
 exports.register = function (req, res) {
-    new User({
+    var user = new User({
         _id: mongoose.Types.ObjectId(),
         username: req.body.username,
         email: req.body.email,
@@ -49,18 +51,15 @@ exports.register = function (req, res) {
             displayUserEmail: true,
             displayUserRole: true
         }
-    }).save(function (err) {
-        if (err) {
-            console.log("Registration error '%s'", err);
+    });
+
+    user.save(function (err) {
+        if (err)
             return res.status(500).send(err);
-        }
 
         passport.authenticate('local')(req, res, function () {
-            var username = req.body.username;
-
-            console.log("Registration successful. User '%s' authenticated.", username);
             User.findOne({
-                username: username
+                username: req.body.username
             }, function (err, user) {
                 if (err)
                     return res.status(500).send(err);
@@ -73,15 +72,19 @@ exports.register = function (req, res) {
 
 exports.login = function (req, res) {
     User.findOne({
-        'username': req.body.username
+        username: req.body.username
     }, function (err, user) {
         if (err)
             return res.status(500).send(err);
 
         if (!user)
-            return res.status(401).send();
+            return res.status(401).send({message: "Invalid login."});
 
-        res.status(200).send(user);
+        var token = jwt.sign(user.username, config.secret, {
+            expiresInMinutes: 15 // expires in 15 mins
+        });
+
+        res.status(200).send({authToken: token});
     });
 };
 

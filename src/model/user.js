@@ -17,9 +17,9 @@ var UserSchema = new Schema({
     projectRole: {type: String, default: "developer"},
     project: {type: String, default: "unassigned"},
     expertise: String,
-    _tickets: {type: [Schema.Types.ObjectId], ref: "Ticket"},
-    _logs: {type: [Schema.Types.ObjectId], ref: "Log"},
-    _comments: {type: [Schema.Types.ObjectId], ref: "Comment"},
+    _tickets: [{type: Schema.Types.ObjectId, ref: "Ticket"}],
+    _logs: [{type: Schema.Types.ObjectId, ref: "Log"}],
+    _comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
     settings: {type: Settings.schema}
 });
 
@@ -45,7 +45,7 @@ UserSchema.pre('save', function (done) {
 
 /**
  * Checks the provided password with the one stored for this user.
- * @param password povided password
+ * @param password provided password
  * @param done callback
  */
 UserSchema.methods.verifyPassword = function (password, done) {

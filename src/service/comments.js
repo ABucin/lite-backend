@@ -1,6 +1,6 @@
-var mongoose = require('mongoose'),
-    Comment = require('../model/comment'),
-    User = require('../model/user');
+var mongoose = require('mongoose');
+var Comment = new require('../model/comment');
+var User = new require('../model/user');
 
 exports.createComment = function (req, res) {
     var comment = new Comment({
@@ -33,6 +33,11 @@ exports.createComment = function (req, res) {
         });
 };
 
+/**
+ * Deletes comment with provided id.
+ * @param req Object request
+ * @param res Object response
+ */
 exports.deleteComment = function (req, res) {
     Comment.remove({
         _id: req.params.id
@@ -46,8 +51,8 @@ exports.deleteComment = function (req, res) {
 
 /**
  * Retrieves comment with provided id.
- * @param req
- * @param res
+ * @param req Object request body
+ * @param res Object response
  */
 exports.getComment = function (req, res) {
     Comment.findById(req.params.id,

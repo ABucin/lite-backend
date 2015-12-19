@@ -1,39 +1,40 @@
 /**
  * Required Node modules.
  */
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    cors = require('cors'),
-    mongoose = require('mongoose'),
-    session = require('express-session'),
-    passport = require('passport'),
-    server = express(),
-    router = express.Router(),
-    /**
-     * Required app-specific modules.
-     */
-    config = require('./../config.json'),
-    utils = require('./utils/population'),
-    analyticsService = require('./service/analytics'),
-    authService = require('./service/auth'),
-    commentsService = require('./service/comments'),
-    logsService = require('./service/logs'),
-    settingsService = require('./service/settings'),
-    ticketsService = require('./service/tickets'),
-    usersService = require('./service/users'),
-    /**
-     * Constants.
-     */
-    RESOURCE = {
-        AUTH: "/auth",
-        SETTINGS: "/settings",
-        TICKETS: "/tickets",
-        USERS: "/users",
-        COMMENTS: "/comments",
-        ANALYTICS: "/analytics",
-        LOGS: "/logs"
-    };
+var express = require('express');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var cors = require('cors');
+var mongoose = new require('mongoose');
+var morgan = require('morgan');
+var session = require('express-session');
+var passport = require('passport');
+var server = express();
+var router = express.Router();
+/**
+ * Required app-specific modules.
+ */
+var config = new require('./../config.json');
+var utils = require('./utils/population');
+var analyticsService = require('./service/analytics');
+var authService = require('./service/auth');
+var commentsService = require('./service/comments');
+var logsService = require('./service/logs');
+var settingsService = require('./service/settings');
+var ticketsService = require('./service/tickets');
+var usersService = require('./service/users');
+/**
+ * Constants.
+ */
+var RESOURCE = {
+    AUTH: "/auth",
+    SETTINGS: "/settings",
+    TICKETS: "/tickets",
+    USERS: "/users",
+    COMMENTS: "/comments",
+    ANALYTICS: "/analytics",
+    LOGS: "/logs"
+};
 
 /**
  * Load Express modules.
@@ -43,6 +44,7 @@ server.use(bodyParser.urlencoded({
     extended: true
 }));
 server.use(bodyParser.json());
+server.use(morgan('dev'));
 server.use(cors());
 // Set the path to the index.html file.
 server.use(express.static(__dirname + "./../"));
@@ -53,18 +55,17 @@ server.use(session({
 }));
 server.use(passport.initialize());
 server.use(passport.session());
-server.use(config.root + config.apiVersion, router);
+server.use(config.root + config.version, router);
 
-// Specify port and ip address of src
-server.listen(config.port, config.ip);
+server.listen(config.port);
 
 console.log('LITE backend server started. Listening on port %s ...', config.port);
 
-mongoose.connect(config.dbURI);
+mongoose.connect(config.db, function (err) {
+    if (err) throw err;
+});
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
+mongoose.connection.once('open', function () {
     console.log('Connection to DB established...');
 });
 
