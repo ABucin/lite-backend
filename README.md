@@ -19,44 +19,4 @@ Backend for the LITE project.
 
 ### REST API
 
-Every route is prefixed by **/itr/api/v1** and secured using Basic authentication (will be OAuth2 in the future).
-
-#### Analytics
-
-/analytics?type={type} **[GET]**
-
-#### Authentication
-
-/auth/login **[POST]**
-
-/auth/logout **[POST]**
-
-/auth/register **[POST]**
-
-#### Comments
-
-/comments/{commentId} **[PUT, DELETE]**
-
-#### Logs
-
-/logs **[GET, POST]**
-
-#### Settings
-
-/settings **[GET, PUT]**
-
-#### Tickets
-
-/tickets **[GET, POST]**
-
-/tickets/{ticketId} **[PUT, DELETE]**
-
-/tickets/{ticketId}/comments **[GET, POST]**
-
-#### Users
-
-/users **[GET]**
-
-/users?project={project} **[GET]**
-
-/users/{userId} **[GET, PUT]**
+See [REST API Documentation](./doc)
