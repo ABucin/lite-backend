@@ -7,7 +7,6 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var mongoose = new require('mongoose');
 var morgan = require('morgan');
-var session = require('express-session');
 var passport = require('passport');
 var server = express();
 var router = express.Router();
@@ -48,13 +47,7 @@ server.use(morgan('dev'));
 server.use(cors());
 // Set the path to the index.html file.
 server.use(express.static(__dirname + "./../"));
-//server.use(session({
-//    secret: config.secret,
-//    saveUninitialized: true,
-//    resave: true
-//}));
 server.use(passport.initialize());
-//server.use(passport.session());
 server.use(config.root + config.version, router);
 
 server.listen(config.port);
