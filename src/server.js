@@ -48,13 +48,13 @@ server.use(morgan('dev'));
 server.use(cors());
 // Set the path to the index.html file.
 server.use(express.static(__dirname + "./../"));
-server.use(session({
-    secret: config.secret,
-    saveUninitialized: true,
-    resave: true
-}));
+//server.use(session({
+//    secret: config.secret,
+//    saveUninitialized: true,
+//    resave: true
+//}));
 server.use(passport.initialize());
-server.use(passport.session());
+//server.use(passport.session());
 server.use(config.root + config.version, router);
 
 server.listen(config.port);
@@ -93,7 +93,7 @@ router.route(RESOURCE.AUTH + '/logout')
 /**
  * Comment routes.
  */
-router.route(RESOURCE.USERS + '/:id/tickets/:ticketId/comments')
+router.route(RESOURCE.TICKETS + '/:id/comments')
     .post(authService.isAuthenticated, commentsService.createComment);
 
 router.route(RESOURCE.COMMENTS + '/:id')
@@ -105,21 +105,20 @@ router.route(RESOURCE.COMMENTS + '/:id')
  * Log routes.
  */
 router.route(RESOURCE.LOGS)
-    .get(authService.isAuthenticated, logsService.getAllLogs);
-router.route(RESOURCE.USERS + '/:id/logs')
+    .get(authService.isAuthenticated, logsService.getAllLogs)
     .post(authService.isAuthenticated, logsService.createLog);
 
 /**
  * Settings routes.
  */
-router.route(RESOURCE.USERS + '/:id/settings')
+router.route(RESOURCE.SETTINGS)
     .get(authService.isAuthenticated, settingsService.getSettings)
     .put(authService.isAuthenticated, settingsService.updateSettings);
 
 /**
  * Ticket routes.
  */
-router.route(RESOURCE.USERS + '/:id/tickets')
+router.route(RESOURCE.TICKETS)
     .get(authService.isAuthenticated, ticketsService.getTickets)
     .post(authService.isAuthenticated, ticketsService.createTicket);
 

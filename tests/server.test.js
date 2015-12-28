@@ -8,8 +8,7 @@ var Log = new require('../src/model/log');
 var Ticket = new require('../src/model/ticket');
 var Comment = new require('../src/model/comment');
 var baseURL = config.host + ':' + config.port + config.root + config.version;
-var authHeader = 'Basic dGVzdDp0ZXN0';
-var authHeader2 = 'Basic dGVzdDI6dGVzdDI=';
+var authHeader = 'JWT eyJhbGciOiJIUzI1NiJ9.dGVzdA.f7H5ZOdivyL5XEEJQJiEWeZAJfvhrbpxcJnmzlBylTE';
 
 describe('Server tests', function () {
     mongoose.connect(config.db);
@@ -127,7 +126,7 @@ describe('Server tests', function () {
         done();
     });
 
-    xdescribe('Analytics resource tests', function () {
+    describe('Analytics resource tests', function () {
 
         it('should retrieve chart with specified type', function (done) {
             var chartType = 'effortEstimation';
@@ -213,7 +212,7 @@ describe('Server tests', function () {
 
     });
 
-    xdescribe('Comment resource tests', function () {
+    describe('Comment resource tests', function () {
 
         it('should retrieve comment with specified id', function (done) {
             var id = "c1";
@@ -233,10 +232,9 @@ describe('Server tests', function () {
         });
 
         xit('should add a comment', function (done) {
-            var ticketId = "t1";
-            var userId = "u1";
+            var id = "t1";
 
-            superagent.post(baseURL + '/users/' + userId + '/tickets/' + ticketId + '/comments')
+            superagent.post(baseURL + '/tickets/' + id + '/comments')
                 .set('Authorization', authHeader)
                 .send({ticket: 't1', content: 'comment2', author: 'test2'})
                 .end(function (e, res) {
@@ -252,14 +250,15 @@ describe('Server tests', function () {
                             if (err)
                                 expect().fail(err);
 
-                            expect(user.comments.length).to.eql(2);
+                            expect(user._comments).to.be.ok;
+                            expect(user._comments.length).to.eql(2);
                         });
 
                     done();
                 });
         });
 
-        it('should update the comment with the given id', function (done) {
+        xit('should update the comment with the given id', function (done) {
             var id = "c1";
 
             superagent.put(baseURL + '/comments/' + id)
@@ -401,12 +400,10 @@ describe('Server tests', function () {
         });
     });
 
-    xdescribe('Tickets resource tests', function () {
+    describe('Tickets resource tests', function () {
 
-        xit('should retrieve all tickets for the given user', function (done) {
-            var userId = "u1";
-
-            superagent.get(baseURL + '/users/' + userId + '/tickets')
+        xit('should retrieve all tickets for the currently authenticated user', function (done) {
+            superagent.get(baseURL + '/tickets')
                 .set('Authorization', authHeader)
                 .end(function (e, res) {
                     expect(e).to.eql(null);
@@ -418,10 +415,8 @@ describe('Server tests', function () {
                 });
         });
 
-        xit('should create a ticket for the authenticated user', function (done) {
-            var userId = 'u1';
-
-            superagent.post(baseURL + 'users/' + userId + '/tickets')
+        xit('should create a ticket for the currently authenticated user', function (done) {
+            superagent.post(baseURL + '/tickets')
                 .set('Authorization', authHeader)
                 .send({
                     title: 'new ticket',
@@ -554,12 +549,10 @@ describe('Server tests', function () {
 
     });
 
-    xdescribe('Settings resource tests', function () {
+    describe('Settings resource tests', function () {
 
         it('should retrieve settings for currently authenticated user', function (done) {
-            var id = "u1";
-
-            superagent.get(baseURL + '/users/' + id + '/settings')
+            superagent.get(baseURL + '/settings')
                 .set('Authorization', authHeader)
                 .end(function (e, res) {
                     expect(e).to.eql(null);
@@ -575,9 +568,7 @@ describe('Server tests', function () {
         });
 
         it('should update setting for currently authenticated user', function (done) {
-            var id = "u1";
-
-            superagent.put(baseURL + '/users/' + id + '/settings')
+            superagent.put(baseURL + '/settings')
                 .set('Authorization', authHeader)
                 .send({displayUserEmail: false})
                 .end(function (e, res) {
@@ -594,7 +585,7 @@ describe('Server tests', function () {
         });
     });
 
-    xdescribe('Logs resource tests', function () {
+    describe('Logs resource tests', function () {
 
         it('should retrieve all log entries', function (done) {
             superagent.get(baseURL + '/logs')
@@ -610,11 +601,9 @@ describe('Server tests', function () {
                 });
         });
 
-        it('should create a log entry for the authenticated user', function (done) {
-            var id = 'u1';
-
-            superagent.post(baseURL + '/users/' + id + '/logs')
-                .set('Authorization', authHeader2)
+        it('should create a log entry for currently authenticated user', function (done) {
+            superagent.post(baseURL + '/logs')
+                .set('Authorization', authHeader)
                 .send({
                     action: 'action',
                     target: 'target',

@@ -1,38 +1,27 @@
-// Load required packages
-var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
+var passport = new require('passport');
+var JwtStrategy = new require('passport-jwt').Strategy;
 var User = new require('../model/user');
-var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
+var mongoose = new require('mongoose');
+var jwt = new require('jsonwebtoken');
 var config = new require('./../../config.json');
 
 /**
  * Configures the Passport module to allow the authentication of users.
  */
-passport.use(new BasicStrategy(
-    function (username, password, done) {
-        User.findOne({username: username}, '+password', function (err, user) {
-            if (err)
-                return done(err);
+var opts = {};
+opts.secretOrKey = config.secret;
 
-            if (!user)
-                return done(null, false);
+passport.use(new JwtStrategy(opts, function (jwtPayload, done) {
+    User.findOne({id: jwtPayload.sub}, function (err, user) {
+        if (err)
+            return done(err);
 
-            // Make sure the password is correct
-            user.verifyPassword(password, function (err, isMatch) {
-                if (err)
-                    return done(err);
+        if (!user)
+            return done(null, false);
 
-                // Password did not match
-                if (!isMatch)
-                    return done(null, false);
-
-                // Success
-                return done(null, user);
-            });
-        });
-    }
-));
+        return done(null, user);
+    });
+}));
 
 /**
  * Authentication.
@@ -57,7 +46,7 @@ exports.register = function (req, res) {
         if (err)
             return res.status(500).send(err);
 
-        passport.authenticate('local')(req, res, function () {
+        passport.authenticate('jwt')(req, res, function () {
             User.findOne({
                 username: req.body.username
             }, function (err, user) {
@@ -80,8 +69,23 @@ exports.login = function (req, res) {
         if (!user)
             return res.status(401).send({message: "Invalid login."});
 
+        //TODO: compare user password with existing password
+// Make sure the password is correct
+    /*    user.verifyPassword(password, function (err, isMatch) {
+            if (err)
+                return done(err);
+
+            // Password did not match
+            if (!isMatch)
+                return done(null, false);
+
+            // Success
+            return done(null, user);
+        });*/
+
+        // generate token using username
         var token = jwt.sign(user.username, config.secret, {
-            expiresInMinutes: 15 // expires in 15 mins
+            expiresInMinutes: 15
         });
 
         res.status(200).send({authToken: token});
@@ -93,4 +97,4 @@ exports.logout = function (req, res) {
     res.status(200).send();
 };
 
-exports.isAuthenticated = passport.authenticate('basic', {session: false});
+exports.isAuthenticated = passport.authenticate('jwt', {session: false});

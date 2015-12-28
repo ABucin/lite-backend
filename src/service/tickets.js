@@ -5,64 +5,49 @@ var Ticket = new require('../model/ticket'),
 
 exports.createTicket = function (req, res) {
     // save the ticket and check for errors
-    User.findById(req.params.id,
-        function (err, user) {
+    Ticket.find(function (err, tickets) {
+        if (err)
+            return res.status(500).send(err);
+
+        var latestTicket = _.max(tickets, function (ticket) {
+            return ticket.code;
+        });
+
+        var ticketData = {
+            _id: mongoose.Types.ObjectId(),
+            title: req.body.title,
+            status: 'created',
+            type: req.body.type,
+            description: req.body.description,
+            loggedTime: req.body.loggedTime,
+            estimatedTime: req.body.estimatedTime,
+            remainingTime: req.body.estimatedTime,
+            owner: req.body.owner,
+            priority: req.body.priority,
+            code: latestTicket.code + 1
+        };
+
+        req.user._tickets.push(ticketData._id);
+
+        req.user.save(function (err) {
             if (err)
                 return res.status(500).send(err);
 
-            if (!user)
-                return res.status(404).send();
+            var ticket = new Ticket(ticketData);
 
-            Ticket.find(function (err, tickets) {
+            ticket.save(function (err) {
                 if (err)
                     return res.status(500).send(err);
 
-                var latestTicket = _.max(tickets, function (ticket) {
-                    return ticket.code;
-                });
-
-                var ticketData = {
-                    _id: mongoose.Types.ObjectId(),
-                    title: req.body.title,
-                    status: 'created',
-                    type: req.body.type,
-                    description: req.body.description,
-                    loggedTime: req.body.loggedTime,
-                    estimatedTime: req.body.estimatedTime,
-                    remainingTime: req.body.estimatedTime,
-                    owner: req.body.owner,
-                    priority: req.body.priority,
-                    code: latestTicket.code + 1
-                };
-
-                user._tickets.push(ticketData._id);
-
-                user.save(function (err) {
-                    if (err)
-                        return res.status(500).send(err);
-
-                    var ticket = new Ticket(ticketData);
-
-                    ticket.save(function (err) {
-                        if (err)
-                            return res.status(500).send(err);
-
-                        res.status(201).json(ticketData);
-                    });
-                });
+                res.status(201).json(ticketData);
             });
         });
+    });
 };
 
 exports.getTickets = function (req, res) {
     //TODO: remake this so it returns all ticket objects for user
-    User.findById(req.params.id,
-        function (err, user) {
-            if (err)
-                return res.status(500).send(err);
-
-            res.json(user._tickets);
-        });
+    res.json(req.user._tickets);
 };
 
 exports.updateTicket = function (req, res) {

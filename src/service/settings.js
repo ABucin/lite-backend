@@ -1,8 +1,9 @@
-var User = new require('../model/user'),
-    Settings = new require('../model/settings');
+var User = new require('../model/user');
+var Settings = new require('../model/settings');
 
 exports.getSettings = function (req, res) {
-    User.findById(req.params.id,
+    // user is added by Passport middleware into request
+    User.findById(req.user._id,
         function (err, user) {
             if (err)
                 return res.status(500).send({message: "Failed to query user."});
@@ -15,20 +16,11 @@ exports.getSettings = function (req, res) {
 };
 
 exports.updateSettings = function (req, res) {
-    User.findById(req.params.id,
-        function (err, user) {
+    Settings.findByIdAndUpdate(req.user.settings._id, {$set: req.body}, {new: true},
+        function (err, setting) {
             if (err)
-                return res.status(500).send({message: "Failed to query user."});
+                return res.status(500).send(err);
 
-            if (!user)
-                return res.status(404).send({message: "User not found."});
-
-            Settings.findByIdAndUpdate(user.settings._id, {$set: req.body}, {new: true},
-                function (err, setting) {
-                    if (err)
-                        return res.status(500).send(err);
-
-                    res.json(setting);
-                });
+            res.json(setting);
         });
 };

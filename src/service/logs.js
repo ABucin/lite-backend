@@ -28,23 +28,17 @@ exports.createLog = function (req, res) {
     });
 
     // save the log and check for errors
-    User.findById(req.params.id,
-        function (err, user) {
+    log.save(function (err) {
+        if (err)
+            return res.status(500).send(err);
+
+        req.user._logs.push(log._id);
+
+        req.user.save(function (err) {
             if (err)
                 return res.status(500).send(err);
 
-            log.save(function (err) {
-                if (err)
-                    return res.status(500).send(err);
-
-                user._logs.push(log._id);
-
-                user.save(function (err) {
-                    if (err)
-                        return res.status(500).send(err);
-
-                    res.status(201).json(log);
-                });
-            });
+            res.status(201).json(log);
         });
+    });
 };

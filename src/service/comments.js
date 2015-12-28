@@ -1,36 +1,29 @@
 var mongoose = require('mongoose');
 var Comment = new require('../model/comment');
-var User = new require('../model/user');
 
 exports.createComment = function (req, res) {
     var comment = new Comment({
         _id: mongoose.Types.ObjectId(),
-        ticket: req.params.ticketId,
+        ticket: req.params.id,
         content: req.body.content,
         author: req.body.author,
         timestamp: new Date()
     });
 
     // save the comment and check for errors
-    User.findById(req.params.id,
-        function (err, user) {
+    comment.save(function (err) {
+        if (err)
+            return res.status(500).send(err);
+
+        req.user._comments.push(comment._id);
+
+        req.user.save(function (err) {
             if (err)
                 return res.status(500).send(err);
 
-            comment.save(function (err) {
-                if (err)
-                    return res.status(500).send(err);
-
-                user._comments.push(comment._id);
-
-                user.save(function (err) {
-                    if (err)
-                        return res.status(500).send(err);
-
-                    res.status(201).json(comment);
-                });
-            });
+            res.status(201).json(comment);
         });
+    });
 };
 
 /**
